@@ -1,26 +1,54 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  /* === OHé — Thème cool (sober contraste) === */
+
+  /* Couleurs */
+  --color-ohe-bg: #F4F6FB;
+  --color-ohe-panel: #FFFFFF;
+  --color-ohe-panel-tint: #EEF2FA;
+  --color-ohe-ink: #15171C;
+  --color-ohe-muted: #6A6E78;
+  --color-ohe-line: #15171C22;
+  --color-ohe-line-soft: #15171C10;
+  --color-ohe-accent: #1E3A8A;
+  --color-ohe-accent-soft: #1E3A8A14;
+  --color-ohe-accent-ink: #F8FAFD;
+
+  /* Typographies */
+  --font-sans: var(--font-sans), -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-serif: var(--font-serif), Georgia, serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* === Utilitaires custom === */
+@layer utilities {
+  /* Eyebrow label letter-spaced — pattern récurrent du design */
+  .ohe-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    font-weight: 500;
   }
+
+  /* Caption label (plus discret) */
+  .ohe-caption {
+    font-size: 10px;
+    letter-spacing: 0.36em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  /* Text wrap balance & pretty (déjà supporté Tailwind v4 mais on les expose) */
+  .text-balance { text-wrap: balance; }
+  .text-pretty { text-wrap: pretty; }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Reset léger */
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
 }
