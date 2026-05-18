@@ -1,13 +1,84 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
+// Schéma de données pour ohe-lead-gen
+// Application de génération de leads pour les salons OHé
 
 generator client {
-  provider = "prisma-client"
-  output   = "../app/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================
+// Campaign — une campagne salon (un événement = une campagne)
+// ============================================================
+model Campaign {
+  id          String   @id @default(cuid())
+  name        String   // ex: "Salon RH Paris 2026"
+  slug        String   @unique // ex: "paris-rh-2026" (utilisé dans l'URL)
+  location    String?  // ex: "Porte de Versailles, Hall 4"
+  startDate   DateTime
+  endDate     DateTime
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  leads       Lead[]
+
+  @@index([slug])
+  @@index([isActive])
+}
+
+// ============================================================
+// Lead — un visiteur qui a complété le test (coordonnées)
+// ============================================================
+model Lead {
+  id          String   @id @default(cuid())
+  campaignId  String
+  campaign    Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+
+  // Coordonnées
+  firstName   String
+  lastName    String
+  email       String
+  company     String
+  phone       String?
+  jobTitle    String?
+
+  // Consentement RGPD (case unique cochée)
+  consent     Boolean  @default(false)
+
+  createdAt   DateTime @default(now())
+
+  session     TestSession?
+
+  @@index([campaignId])
+  @@index([email])
+  @@index([createdAt])
+}
+
+// ============================================================
+// TestSession — résultat agrégé du test (un test = une session)
+// ============================================================
+model TestSession {
+  id                  String   @id @default(cuid())
+  leadId              String   @unique
+  lead                Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+
+  // Score procédural (orthographe/grammaire)
+  proceduralScore     Int      // ex: 8 (sur le total de questions procédurales)
+  proceduralTotal     Int      // ex: 12 (nombre total de questions procédurales)
+  cefrLevel           String   // ex: "A", "B1", "B2", "C" — niveau indicatif
+
+  // Réponses aux questions déclaratives (JSON)
+  // Format: { "q1": "Oui, pour mes collaborateurs", "q2": "...", "q3": "..." }
+  declarativeAnswers  Json
+
+  // Temps total passé sur le test (en ms), pour les stats backoffice
+  durationMs          Int
+
+  completedAt         DateTime @default(now())
+
+  @@index([completedAt])
 }
