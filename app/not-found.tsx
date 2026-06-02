@@ -10,7 +10,7 @@ export default function NotFound() {
           <span className="font-serif italic text-ohe-accent">n&apos;existe pas</span>.
         </h1>
         <p className="mt-6 text-base text-ohe-muted text-pretty">
-          La campagne demandée n&apos;a pas été trouvée ou n&apos;est plus active.
+          La page demandée n&apos;a pas été trouvée.
         </p>
         <Link
           href="/"

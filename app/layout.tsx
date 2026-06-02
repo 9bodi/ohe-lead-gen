@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Instrument_Sans, Instrument_Serif } from "next/font/google";
+import { Toaster } from "sonner";
 import "./globals.css";
 
 const instrumentSans = Instrument_Sans({
@@ -29,9 +30,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr" className={`${instrumentSans.variable} ${instrumentSerif.variable}`}>
+    <html
+      lang="fr"
+      className={`${instrumentSans.variable} ${instrumentSerif.variable}`}
+    >
       <body className="font-sans bg-ohe-bg text-ohe-ink antialiased">
         {children}
+        <Toaster
+          position="top-center"
+          toastOptions={{
+            style: {
+              fontFamily: "var(--font-sans)",
+              borderRadius: "12px",
+            },
+          }}
+        />
       </body>
     </html>
   );

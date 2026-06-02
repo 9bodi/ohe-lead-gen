@@ -6,4 +6,6 @@ export { Badge } from "./Badge";
 export { Header } from "./Header";
 export { ProgressDots } from "./ProgressDots";
 export { TimerRing } from "./TimerRing";
-export { QuestionCard } from "./QuestionCard";
+export { FieldLabel } from "./FieldLabel";
+export { FieldInput } from "./FieldInput";
+export { Checkbox } from "./Checkbox";

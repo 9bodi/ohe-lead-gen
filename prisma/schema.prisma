@@ -1,5 +1,6 @@
-// Schéma de données pour ohe-lead-gen
-// Application de génération de leads pour les salons OHé
+// Schéma de données pour ohe-lead-gen (version Freemium)
+// Test diagnostic gratuit, hébergé sur le site OHé,
+// avec génération de leads via capture email
 
 generator client {
   provider = "prisma-client-js"
@@ -11,74 +12,111 @@ datasource db {
 }
 
 // ============================================================
-// Campaign — une campagne salon (un événement = une campagne)
+// Campaign — une source / canal de leads
 // ============================================================
+// type 'web_freemium' = leads du site OHé (par défaut)
+// type 'event'       = leads d'un salon (créés via backoffice)
+//
+// Permet de distinguer les leads selon leur origine.
 model Campaign {
-  id          String   @id @default(cuid())
-  name        String   // ex: "Salon RH Paris 2026"
-  slug        String   @unique // ex: "paris-rh-2026" (utilisé dans l'URL)
-  location    String?  // ex: "Porte de Versailles, Hall 4"
-  startDate   DateTime
-  endDate     DateTime
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id          String       @id @default(cuid())
+  name        String       // ex: "Web Freemium" ou "Salon RH Paris 2026"
+  slug        String       @unique // ex: "web-freemium" ou "paris-rh-2026"
+  type        CampaignType @default(web_freemium)
+  location    String?      // ex: "Porte de Versailles, Hall 4" (uniquement pour les events)
+  startDate   DateTime?
+  endDate     DateTime?
+  isActive    Boolean      @default(true)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
 
   leads       Lead[]
 
   @@index([slug])
   @@index([isActive])
+  @@index([type])
+}
+
+enum CampaignType {
+  web_freemium
+  event
 }
 
 // ============================================================
-// Lead — un visiteur qui a complété le test (coordonnées)
+// Lead — un visiteur qui a complété le test
 // ============================================================
+// Capture minimale : email + opt-in marketing
+// + tracking UTM pour mesurer l'efficacité des sources
 model Lead {
-  id          String   @id @default(cuid())
-  campaignId  String
-  campaign    Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  id                  String   @id @default(cuid())
+  campaignId          String
+  campaign            Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
 
-  // Coordonnées
-  firstName   String
-  lastName    String
-  email       String
-  company     String
-  phone       String?
-  jobTitle    String?
+  // === Identifiant principal ===
+  email               String   // collecté sous intérêt légitime (délivrance du résultat)
 
-  // Consentement RGPD (case unique cochée)
-  consent     Boolean  @default(false)
+  // === Consentements RGPD ===
+  marketingOptIn      Boolean  @default(false) // case "J'accepte de recevoir les infos OHé"
 
-  createdAt   DateTime @default(now())
+  // === Tracking source ===
+  utmSource           String?  // ex: 'linkedin', 'newsletter'
+  utmCampaign         String?  // ex: 'oct2026'
+  utmMedium           String?  // ex: 'social', 'email'
 
-  session     TestSession?
+  createdAt           DateTime @default(now())
+
+  result              FreemiumResult?
 
   @@index([campaignId])
   @@index([email])
   @@index([createdAt])
+  @@index([utmSource])
 }
 
 // ============================================================
-// TestSession — résultat agrégé du test (un test = une session)
+// FreemiumResult — résultat du test (un test = un résultat)
 // ============================================================
-model TestSession {
-  id                  String   @id @default(cuid())
-  leadId              String   @unique
-  lead                Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+model FreemiumResult {
+  id                    String   @id @default(cuid())
+  leadId                String   @unique
+  lead                  Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
 
-  // Score procédural (orthographe/grammaire)
-  proceduralScore     Int      // ex: 8 (sur le total de questions procédurales)
-  proceduralTotal     Int      // ex: 12 (nombre total de questions procédurales)
-  cefrLevel           String   // ex: "A", "B1", "B2", "C" — niveau indicatif
+  // === Scores procéduraux ===
+  // Bloc 1 = Accords des mots (8 questions)
+  // Bloc 2 = Conjugaison des verbes (8 questions)
+  block1Correct         Int      // nombre de bonnes réponses au bloc 1 (0-8)
+  block1Score           Float    // 0 / 0.5 / 0.75 / 1 (selon les seuils du CDC)
+  block1Level           BlockLevel  // non_maitrise / fragile / fonctionnel / maitrise
 
-  // Réponses aux questions déclaratives (JSON)
-  // Format: { "q1": "Oui, pour mes collaborateurs", "q2": "...", "q3": "..." }
-  declarativeAnswers  Json
+  block2Correct         Int
+  block2Score           Float
+  block2Level           BlockLevel
 
-  // Temps total passé sur le test (en ms), pour les stats backoffice
-  durationMs          Int
+  // === Score déclaratif : profil ADAPTATION ===
+  // Score sur 3 (Q1, Q2, Q3 - axe ADAPTATION)
+  adaptationScore       Int      // 0 à 3
+  adaptationProfile     AdaptationProfile // adapted / not_adapted
 
-  completedAt         DateTime @default(now())
+  // === Réponses détaillées (audit, debug, analyse future) ===
+  // Format JSON : { q1: { questionId, choiceKey, isCorrect, answeredInMs }, ... }
+  rawAnswers            Json
+
+  // === Métadonnées ===
+  durationMs            Int      // temps total passé sur le test
+  completedAt           DateTime @default(now())
 
   @@index([completedAt])
+  @@index([adaptationProfile])
+}
+
+enum BlockLevel {
+  non_maitrise   // 0-2/8  → 0 point   → rouge
+  fragile        // 3-4/8  → 0.5 point → orange
+  fonctionnel    // 5-6/8  → 0.75 point→ bleu
+  maitrise       // 7-8/8  → 1 point   → vert
+}
+
+enum AdaptationProfile {
+  adapted        // score 2-3/3 → formation adaptée
+  not_adapted    // score 0-1/3 → formation peu adaptée
 }
