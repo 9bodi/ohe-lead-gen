@@ -1,0 +1,91 @@
+import Link from "next/link";
+import { Eyebrow } from "@/components/ui";
+
+export default function RulesPage() {
+  const rules = [
+    {
+      num: "01",
+      title: "Chronométré",
+      body: "Vous avez 10 secondes pour répondre à chaque question d'orthographe. Au-delà, la question passe automatiquement.",
+    },
+    {
+      num: "02",
+      title: "Pas de retour en arrière",
+      body: "Une fois validée, votre réponse est définitive. Vos premières intuitions sont les meilleures.",
+    },
+    {
+      num: "03",
+      title: "Résultat à la fin",
+      body: "Votre niveau et profil seront affichés à la fin du test. Aucun affichage de score pendant les questions.",
+    },
+  ];
+
+  return (
+    <main className="min-h-screen bg-ohe-bg text-ohe-ink flex flex-col">
+      {/* Header */}
+      <div className="flex items-baseline justify-between px-14 py-6 border-b border-ohe-line">
+        <div className="flex items-baseline gap-4 text-ohe-accent">
+          <span className="font-serif italic text-[22px]">OHé</span>
+          <span className="ohe-caption opacity-75">Diagnostic</span>
+        </div>
+      </div>
+
+      {/* Contenu centré */}
+      <div className="flex-1 flex items-center justify-center px-14 py-12">
+        <div className="max-w-[720px] w-full">
+          <Eyebrow tone="accent">A V A N T &nbsp; D E &nbsp; C O M M E N C E R</Eyebrow>
+
+          <h1 className="mt-6 text-[56px] leading-[1.05] tracking-[-0.022em] font-normal text-balance">
+            Trois règles{" "}
+            <span className="font-serif italic text-ohe-accent">à savoir</span>.
+          </h1>
+
+          <div className="mt-10 flex flex-col">
+            {rules.map((rule, i) => {
+              const isFirst = i === 0;
+              const isLast = i === rules.length - 1;
+              return (
+                <div
+                  key={rule.num}
+                  className={`
+                    grid grid-cols-[60px_1fr] gap-6 py-6
+                    ${isFirst ? "border-t border-ohe-line" : ""}
+                    ${isLast ? "border-b border-ohe-line" : "border-b border-ohe-line-soft"}
+                  `}
+                >
+                  <div className="text-[11px] tracking-[0.2em] text-ohe-accent pt-1.5 font-medium">
+                    {rule.num}
+                  </div>
+                  <div>
+                    <div className="font-serif italic text-[22px] text-ohe-ink">
+                      {rule.title}
+                    </div>
+                    <div className="text-[14px] text-ohe-muted mt-2 text-pretty leading-[1.55]">
+                      {rule.body}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="mt-10 flex items-center gap-6">
+            <Link
+              href="/test"
+              className="inline-flex items-center gap-[14px] px-[26px] py-[16px] rounded-full text-sm font-medium tracking-[0.01em] bg-ohe-accent text-ohe-accent-ink border border-transparent hover:bg-ohe-ink transition-colors"
+            >
+              <span>Je comprends, démarrer</span>
+              <span className="text-base">→</span>
+            </Link>
+            <Link
+              href="/"
+              className="text-sm text-ohe-muted underline underline-offset-4 hover:text-ohe-ink transition-colors"
+            >
+              ← Retour
+            </Link>
+          </div>
+        </div>
+      </div>
+    </main>
+  );
+}
