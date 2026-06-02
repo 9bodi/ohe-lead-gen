@@ -1,236 +1,298 @@
-// Banque de questions du test salon OHé
-// Format : 10 procédurales (orthographe) + 3 déclaratives (qualification lead)
-//
-// IMPORTANT : ce contenu est PLACEHOLDER. À remplacer avec Roxane / l'équipe OHé.
+// Banque de questions du test freemium OHé
+// Source : CDC Freemium V1.0 — sections 2.1, 2.2, 2.3
+
+// === Types ===
 
 export type ProceduralChoice = {
-  /** Clé courte affichée dans le bouton (A, B, C, D) */
-  key: string;
   /** Texte de la réponse */
   text: string;
   /** Marque la bonne réponse */
   correct?: boolean;
-  /** Marque "je ne sais pas" (style visuel atténué) */
+  /** Marque "je ne sais pas trop" (style visuel atténué) */
   unknown?: boolean;
 };
 
 export type ProceduralQuestion = {
   id: string;
   type: "procedural";
-  /** Eyebrow affiché en haut (ex: "Homophones · ce / se / ceux") */
-  category: string;
-  /** Court intro avant l'énoncé (ex: "Complétez la phrase :") */
-  prompt: string;
-  /** Énoncé principal — peut contenir <__> qui sera remplacé par un trait souligné */
+  /** Bloc d'appartenance pour le scoring */
+  block: 1 | 2;
+  /** Énoncé : la partie à compléter est marquée par ___ (triple underscore) */
   statement: string;
-  /** Options de réponse */
+  /** Options de réponse (4 max : 3 propositions + "je ne sais pas trop") */
   choices: ProceduralChoice[];
-};
-
-export type DeclarativeChoice = {
-  key: string;
-  text: string;
 };
 
 export type DeclarativeQuestion = {
   id: string;
   type: "declarative";
-  category: string;
-  prompt: string;
+  /** Énoncé de la question */
   statement: string;
-  choices: DeclarativeChoice[];
+  /** Réponse considérée "adaptée" pour le scoring ADAPTATION */
+  adaptedAnswer: "yes" | "no";
 };
 
 export type Question = ProceduralQuestion | DeclarativeQuestion;
 
-// === Questions procédurales (10) ===
+// === Consigne commune des blocs procéduraux ===
+export const PROCEDURAL_PROMPT = "Quelle orthographe vous semble correcte ?";
 
-const PROCEDURAL_QUESTIONS: ProceduralQuestion[] = [
+// === BLOC 1 — Accords des mots (8 questions, 10 sec chacune) ===
+
+const BLOCK_1_QUESTIONS: ProceduralQuestion[] = [
   {
-    id: "p1",
+    id: "b1q1",
     type: "procedural",
-    category: "Homophones · ce / se / ceux",
-    prompt: "Complétez la phrase :",
-    statement: "« N'oublie pas <__> qui sont importants pour toi. »",
+    block: 1,
+    statement: "Les charges ___ sont colossales.",
     choices: [
-      { key: "A", text: "ce" },
-      { key: "B", text: "se" },
-      { key: "C", text: "ceux", correct: true },
-      { key: "D", text: "Je ne sais pas", unknown: true },
+      { text: "patronal" },
+      { text: "patronale" },
+      { text: "patronals" },
+      { text: "patronales", correct: true },
+      { text: "je ne sais pas trop", unknown: true },
     ],
   },
   {
-    id: "p2",
+    id: "b1q2",
     type: "procedural",
-    category: "Accords du participe passé",
-    prompt: "Quelle est la forme correcte ?",
-    statement: "« Les lettres qu'elle m'a <__> sont arrivées hier. »",
+    block: 1,
+    statement: "Les élections ___ approchent.",
     choices: [
-      { key: "A", text: "envoyé" },
-      { key: "B", text: "envoyés" },
-      { key: "C", text: "envoyées", correct: true },
-      { key: "D", text: "Je ne sais pas", unknown: true },
+      { text: "municipal" },
+      { text: "municipale" },
+      { text: "municipals" },
+      { text: "municipales", correct: true },
+      { text: "je ne sais pas trop", unknown: true },
     ],
   },
   {
-    id: "p3",
+    id: "b1q3",
     type: "procedural",
-    category: "Homophones · a / à",
-    prompt: "Complétez la phrase :",
-    statement: "« Il <__> oublié son rendez-vous <__> Paris. »",
+    block: 1,
+    statement: "Je respecte les décisions ___.",
     choices: [
-      { key: "A", text: "a / à", correct: true },
-      { key: "B", text: "à / a" },
-      { key: "C", text: "a / a" },
-      { key: "D", text: "Je ne sais pas", unknown: true },
+      { text: "présidentiel" },
+      { text: "présidentielle" },
+      { text: "présidentiels" },
+      { text: "présidentielles", correct: true },
+      { text: "je ne sais pas trop", unknown: true },
     ],
   },
   {
-    id: "p4",
+    id: "b1q4",
     type: "procedural",
-    category: "Conjugaison · futur simple",
-    prompt: "Quelle est la forme correcte ?",
-    statement: "« Demain, nous <__> au bureau dès huit heures. »",
+    block: 1,
+    statement: "Tout le monde était ___.",
     choices: [
-      { key: "A", text: "seront" },
-      { key: "B", text: "serons", correct: true },
-      { key: "C", text: "serions" },
-      { key: "D", text: "Je ne sais pas", unknown: true },
+      { text: "fier", correct: true },
+      { text: "fiers" },
+      { text: "fières" },
+      { text: "je ne sais pas trop", unknown: true },
     ],
   },
   {
-    id: "p5",
+    id: "b1q5",
     type: "procedural",
-    category: "Pluriel des noms composés",
-    prompt: "Quel est le pluriel correct ?",
-    statement: "« Des <__> sont arrivés ce matin. »",
+    block: 1,
+    statement: "Tout le monde ___ là.",
     choices: [
-      { key: "A", text: "porte-monnaie", correct: true },
-      { key: "B", text: "portes-monnaie" },
-      { key: "C", text: "portes-monnaies" },
-      { key: "D", text: "Je ne sais pas", unknown: true },
+      { text: "semble", correct: true },
+      { text: "semblent" },
+      { text: "sembles" },
+      { text: "je ne sais pas trop", unknown: true },
     ],
   },
   {
-    id: "p6",
+    id: "b1q6",
     type: "procedural",
-    category: "Homophones · leur / leurs",
-    prompt: "Complétez la phrase :",
-    statement: "« Les enfants ont rangé <__> chambres avant de partir. »",
+    block: 1,
+    statement: "L'équipe ___ après le match.",
     choices: [
-      { key: "A", text: "leur" },
-      { key: "B", text: "leurs", correct: true },
-      { key: "C", text: "leur's" },
-      { key: "D", text: "Je ne sais pas", unknown: true },
+      { text: "crie", correct: true },
+      { text: "cris" },
+      { text: "crient" },
+      { text: "je ne sais pas trop", unknown: true },
     ],
   },
   {
-    id: "p7",
+    id: "b1q7",
     type: "procedural",
-    category: "Accord en genre",
-    prompt: "Quelle est la forme correcte ?",
-    statement: "« Cette décision est <__> à toutes les parties. »",
+    block: 1,
+    statement: "Chacun des participants ___ son prénom.",
     choices: [
-      { key: "A", text: "favorable", correct: true },
-      { key: "B", text: "favorables" },
-      { key: "C", text: "favorablement" },
-      { key: "D", text: "Je ne sais pas", unknown: true },
+      { text: "crie", correct: true },
+      { text: "cris" },
+      { text: "crient" },
+      { text: "je ne sais pas trop", unknown: true },
     ],
   },
   {
-    id: "p8",
+    id: "b1q8",
     type: "procedural",
-    category: "Conjugaison · subjonctif",
-    prompt: "Quelle est la forme correcte ?",
-    statement: "« Il faut que tu <__> à l'heure demain. »",
+    block: 1,
+    statement: "On ___.",
     choices: [
-      { key: "A", text: "es" },
-      { key: "B", text: "sois", correct: true },
-      { key: "C", text: "seras" },
-      { key: "D", text: "Je ne sais pas", unknown: true },
-    ],
-  },
-  {
-    id: "p9",
-    type: "procedural",
-    category: "Orthographe lexicale",
-    prompt: "Quelle est l'orthographe correcte ?",
-    statement: "« Nous avons reçu une <__> très détaillée. »",
-    choices: [
-      { key: "A", text: "réponce" },
-      { key: "B", text: "réponse", correct: true },
-      { key: "C", text: "réponsse" },
-      { key: "D", text: "Je ne sais pas", unknown: true },
-    ],
-  },
-  {
-    id: "p10",
-    type: "procedural",
-    category: "Homophones · ces / ses / c'est / s'est",
-    prompt: "Complétez la phrase :",
-    statement: "« <__> dommage, il n'a pas pu venir. »",
-    choices: [
-      { key: "A", text: "Ces" },
-      { key: "B", text: "Ses" },
-      { key: "C", text: "C'est", correct: true },
-      { key: "D", text: "Je ne sais pas", unknown: true },
+      { text: "part", correct: true },
+      { text: "parts" },
+      { text: "parent" },
+      { text: "je ne sais pas trop", unknown: true },
     ],
   },
 ];
 
-// === Questions déclaratives (3) — placées à la fin pour qualifier le lead ===
+// === BLOC 2 — Conjugaison des verbes (8 questions, 10 sec chacune) ===
+
+const BLOCK_2_QUESTIONS: ProceduralQuestion[] = [
+  {
+    id: "b2q1",
+    type: "procedural",
+    block: 2,
+    statement: "Je ___ tous les dimanches à la messe.",
+    choices: [
+      { text: "prie", correct: true },
+      { text: "prit" },
+      { text: "pris" },
+      { text: "je ne sais pas trop", unknown: true },
+    ],
+  },
+  {
+    id: "b2q2",
+    type: "procedural",
+    block: 2,
+    statement: "Je ___ le dossier et m'en allai.",
+    choices: [
+      { text: "prie" },
+      { text: "prit" },
+      { text: "pris", correct: true },
+      { text: "je ne sais pas trop", unknown: true },
+    ],
+  },
+  {
+    id: "b2q3",
+    type: "procedural",
+    block: 2,
+    statement: "Alec a ___ une bonne décision.",
+    choices: [
+      { text: "prie" },
+      { text: "prit" },
+      { text: "pris", correct: true },
+      { text: "je ne sais pas trop", unknown: true },
+    ],
+  },
+  {
+    id: "b2q4",
+    type: "procedural",
+    block: 2,
+    statement: "C'est toi qui ___ le dossier.",
+    choices: [
+      { text: "fini" },
+      { text: "finit" },
+      { text: "finis", correct: true },
+      { text: "je ne sais pas trop", unknown: true },
+    ],
+  },
+  {
+    id: "b2q5",
+    type: "procedural",
+    block: 2,
+    statement: "Le stagiaire vous ___ le rapport avant ce soir.",
+    choices: [
+      { text: "fini" },
+      { text: "finit", correct: true },
+      { text: "finis" },
+      { text: "je ne sais pas trop", unknown: true },
+    ],
+  },
+  {
+    id: "b2q6",
+    type: "procedural",
+    block: 2,
+    statement: "Il a hélas ___ en retard.",
+    choices: [
+      { text: "fini", correct: true },
+      { text: "finit" },
+      { text: "finis" },
+      { text: "je ne sais pas trop", unknown: true },
+    ],
+  },
+  {
+    id: "b2q7",
+    type: "procedural",
+    block: 2,
+    statement: "Je ___ le dossier d'abord.",
+    choices: [
+      { text: "constitue", correct: true },
+      { text: "constitut" },
+      { text: "constitus" },
+      { text: "je ne sais pas trop", unknown: true },
+    ],
+  },
+  {
+    id: "b2q8",
+    type: "procedural",
+    block: 2,
+    statement: "J'___ les courriels tout de suite.",
+    choices: [
+      { text: "envoie", correct: true },
+      { text: "envoi" },
+      { text: "envois" },
+      { text: "je ne sais pas trop", unknown: true },
+    ],
+  },
+];
+
+// === Questions déclaratives — Axe ADAPTATION (3 questions, 15 sec chacune) ===
 
 const DECLARATIVE_QUESTIONS: DeclarativeQuestion[] = [
   {
     id: "d1",
     type: "declarative",
-    category: "Votre contexte",
-    prompt: "Quelques précisions :",
-    statement: "Dans votre équipe, l'orthographe est-elle un sujet ?",
-    choices: [
-      { key: "A", text: "Oui, un vrai enjeu opérationnel" },
-      { key: "B", text: "Parfois, sur certains documents" },
-      { key: "C", text: "Pas vraiment" },
-      { key: "D", text: "Je ne sais pas" },
-    ],
+    statement:
+      "Le français est-il votre première langue ou une langue que vous maîtrisez bien à l'oral ?",
+    // Oui = adapté
+    adaptedAnswer: "yes",
   },
   {
     id: "d2",
     type: "declarative",
-    category: "Votre rôle",
-    prompt: "Quelques précisions :",
-    statement: "Êtes-vous impliqué(e) dans la formation de vos équipes ?",
-    choices: [
-      { key: "A", text: "Oui, c'est mon rôle principal" },
-      { key: "B", text: "Partiellement, parmi d'autres missions" },
-      { key: "C", text: "Non, ce n'est pas mon périmètre" },
-      { key: "D", text: "Je ne sais pas" },
-    ],
+    statement: "Avez-vous des problèmes de lecture ?",
+    // Non = adapté
+    adaptedAnswer: "no",
   },
   {
     id: "d3",
     type: "declarative",
-    category: "Votre intérêt",
-    prompt: "Une dernière chose :",
-    statement: "Seriez-vous intéressé(e) par un diagnostic complet pour votre équipe ?",
-    choices: [
-      { key: "A", text: "Oui, je veux en savoir plus" },
-      { key: "B", text: "Peut-être, à creuser plus tard" },
-      { key: "C", text: "Non, pas pour le moment" },
-      { key: "D", text: "Je préfère ne pas répondre" },
-    ],
+    statement: "Diriez-vous que vous avez des difficultés en orthographe ?",
+    // Oui = adapté (cible OHé)
+    adaptedAnswer: "yes",
   },
 ];
 
-export const ALL_QUESTIONS: Question[] = [
-  ...PROCEDURAL_QUESTIONS,
-  ...DECLARATIVE_QUESTIONS,
-];
+// === Exports ===
 
-export const TOTAL_QUESTIONS = ALL_QUESTIONS.length; // 13
+export const BLOCK_1 = BLOCK_1_QUESTIONS;
+export const BLOCK_2 = BLOCK_2_QUESTIONS;
+export const DECLARATIVES = DECLARATIVE_QUESTIONS;
 
-// Durée totale du test en secondes
-export const TEST_DURATION_SECONDS = 5 * 60; // 5 minutes
+export const BLOCK_1_COUNT = BLOCK_1.length; // 8
+export const BLOCK_2_COUNT = BLOCK_2.length; // 8
+export const PROCEDURAL_COUNT = BLOCK_1_COUNT + BLOCK_2_COUNT; // 16
+export const DECLARATIVE_COUNT = DECLARATIVES.length; // 3
+export const TOTAL_COUNT = PROCEDURAL_COUNT + DECLARATIVE_COUNT; // 19
 
-// Durée par question (utilisée pour le timer ring visuel)
-export const PER_QUESTION_SECONDS = Math.floor(TEST_DURATION_SECONDS / TOTAL_QUESTIONS);
+// Durées par question (en secondes)
+export const PROCEDURAL_SECONDS_PER_QUESTION = 10;
+export const DECLARATIVE_SECONDS_PER_QUESTION = 15;
+
+// === Helper : mélanger les questions d'un bloc ===
+// L'ordre des blocs reste fixe (1 puis 2), mais les questions DANS un bloc
+// sont mélangées (Fisher-Yates) — comme demandé dans le CDC.
+export function shuffleBlock<T>(questions: T[]): T[] {
+  const arr = [...questions];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
