@@ -1,10 +1,6 @@
 // Template HTML de l'email de bilan freemium
-// Note : on utilise du HTML inline (style="...") car la plupart des clients
-// mail (Gmail, Outlook, etc.) ne supportent pas les feuilles CSS externes.
-
 import type { ScoreResult } from "@/lib/scoring/compute";
 
-// === Mapping niveau → couleur pour l'email ===
 const LEVEL_COLORS = {
   red: { bg: "#FEE2E2", text: "#991B1B", dot: "#EF4444" },
   orange: { bg: "#FFEDD5", text: "#9A3412", dot: "#F97316" },
@@ -24,12 +20,13 @@ interface ResultEmailProps {
   score: ScoreResult;
   recommendation: string;
   resultUrl: string;
-  diagnosticCompletUrl: string;
+  contactUrl: string;
   formationUrl: string;
+  appUrl: string;
 }
 
 export function renderResultEmail(props: ResultEmailProps): { html: string; text: string } {
-  const { recipientEmail, score, recommendation, resultUrl, diagnosticCompletUrl, formationUrl } = props;
+  const { recipientEmail, score, recommendation, resultUrl, contactUrl, formationUrl, appUrl } = props;
 
   const block1Colors = LEVEL_COLORS[score.block1.color];
   const block2Colors = LEVEL_COLORS[score.block2.color];
@@ -47,11 +44,10 @@ export function renderResultEmail(props: ResultEmailProps): { html: string; text
       <td align="center">
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px; background:#FFFFFF; border-radius:16px; overflow:hidden;">
 
-          <!-- Header -->
+          <!-- Header avec logo -->
           <tr>
             <td style="padding:32px 40px 24px; border-bottom:1px solid #15171C22;">
-              <div style="font-family: Georgia, 'Times New Roman', serif; font-style:italic; font-size:26px; color:#1E3A8A; margin:0;">OHé</div>
-              <div style="font-size:11px; letter-spacing:0.32em; text-transform:uppercase; color:#1E3A8A; opacity:0.75; margin-top:4px;">Diagnostic</div>
+              <img src="${appUrl}/images/ohe-logo.png" alt="OHé — Orthographe Héros" width="100" style="display:block; max-width:100px; height:auto;">
             </td>
           </tr>
 
@@ -77,7 +73,6 @@ export function renderResultEmail(props: ResultEmailProps): { html: string; text
                 Vos résultats
               </div>
 
-              <!-- Bloc 1 -->
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid #15171C22;">
                 <tr>
                   <td style="padding:18px 0; border-bottom:1px solid #15171C22;">
@@ -97,7 +92,6 @@ export function renderResultEmail(props: ResultEmailProps): { html: string; text
                   </td>
                 </tr>
 
-                <!-- Bloc 2 -->
                 <tr>
                   <td style="padding:18px 0; border-bottom:1px solid #15171C22;">
                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
@@ -149,7 +143,7 @@ export function renderResultEmail(props: ResultEmailProps): { html: string; text
                 )
                 .join("")}
               <p style="margin:16px 0 0; font-size:12px; color:#6A6E78; font-style:italic;">
-                Votre niveau global (A / B1 / B2 / C) sera précisé avec le diagnostic complet — il s'établit sur les 6 compétences.
+                Votre niveau global (A / B1 / B2 / C) sera précisé après un diagnostic complet sur les 6 compétences.
               </p>
             </td>
           </tr>
@@ -176,21 +170,21 @@ export function renderResultEmail(props: ResultEmailProps): { html: string; text
                 Pour aller plus loin
               </div>
 
-              <!-- CTA principal -->
+              <!-- CTA principal : diagnostic équipe -->
               <table role="presentation" cellpadding="0" cellspacing="0">
                 <tr>
                   <td style="background:#1E3A8A; border-radius:999px;">
-                    <a href="${diagnosticCompletUrl}" style="display:inline-block; padding:14px 28px; color:#F8FAFD; text-decoration:none; font-size:14px; font-weight:500;">
-                      Faire le diagnostic complet →
+                    <a href="${contactUrl}" style="display:inline-block; padding:14px 28px; color:#F8FAFD; text-decoration:none; font-size:14px; font-weight:500;">
+                      Diagnostiquer mon équipe avec OHé →
                     </a>
                   </td>
                 </tr>
               </table>
               <p style="margin:8px 0 24px; font-size:12px; color:#6A6E78; font-style:italic;">
-                15 minutes · 48 questions · 6 compétences · niveau A/B1/B2/C détaillé
+                Évaluez vos collaborateurs sur les 6 compétences et identifiez les besoins de formation.
               </p>
 
-              <!-- CTA secondaire -->
+              <!-- CTA secondaire : site formation -->
               <table role="presentation" cellpadding="0" cellspacing="0">
                 <tr>
                   <td style="border:1px solid #1E3A8A; border-radius:999px;">
@@ -238,7 +232,6 @@ export function renderResultEmail(props: ResultEmailProps): { html: string; text
 </body>
 </html>`;
 
-  // Version texte (fallback pour clients qui ne supportent pas HTML)
   const text = `Bonjour,
 
 Bravo — vous venez de faire le premier pas : évaluer votre maîtrise de l'écrit.
@@ -255,7 +248,7 @@ ENCORE À EXPLORER
 05. Syntaxe (verrouillé)
 06. Compréhension (verrouillé)
 
-Votre niveau global (A/B1/B2/C) sera précisé avec le diagnostic complet — il s'établit sur les 6 compétences.
+Votre niveau global (A/B1/B2/C) sera précisé après un diagnostic complet sur les 6 compétences.
 
 NOTRE RECOMMANDATION
 
@@ -265,7 +258,7 @@ Les fautes ne sont pas une fatalité, juste un problème de méthode. Votre scor
 
 POUR ALLER PLUS LOIN
 
-→ Faire le diagnostic complet (15 min) : ${diagnosticCompletUrl}
+→ Diagnostiquer mon équipe avec OHé : ${contactUrl}
 → Découvrir la formation OHé : ${formationUrl}
 
 Consulter votre bilan en ligne : ${resultUrl}

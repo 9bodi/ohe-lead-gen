@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Eyebrow } from "@/components/ui";
+import { Eyebrow, Logo } from "@/components/ui";
 
 export default function RulesPage() {
   const rules = [
@@ -23,12 +23,7 @@ export default function RulesPage() {
   return (
     <main className="min-h-screen bg-ohe-bg text-ohe-ink flex flex-col">
       {/* Header */}
-      <div className="flex items-baseline justify-between px-14 py-6 border-b border-ohe-line">
-        <div className="flex items-baseline gap-4 text-ohe-accent">
-          <span className="font-serif italic text-[22px]">OHé</span>
-          <span className="ohe-caption opacity-75">Diagnostic</span>
-        </div>
-      </div>
+      <Logo size={32} withLabel />
 
       {/* Contenu centré */}
       <div className="flex-1 flex items-center justify-center px-14 py-12">

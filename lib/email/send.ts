@@ -18,19 +18,18 @@ export async function sendResultEmail(
   const from = process.env.RESEND_FROM_EMAIL ?? "OHé Diagnostic <onboarding@resend.dev>";
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
 
-  // URLs à insérer dans le template
   const resultUrl = `${appUrl}/result/${input.resultId}`;
-  // TODO : à remplacer par les vraies URLs OHé quand disponibles
-  const diagnosticCompletUrl = "https://orthographe-heros.fr/diagnostic-complet";
-  const formationUrl = "https://orthographe-heros.fr/formation";
+  const contactUrl = `${appUrl}/contact`;
+  const formationUrl = "https://orthographe-heros.fr";
 
   const { html, text } = renderResultEmail({
     recipientEmail: input.to,
     score: input.score,
     recommendation: input.recommendation,
     resultUrl,
-    diagnosticCompletUrl,
+    contactUrl,
     formationUrl,
+    appUrl,
   });
 
   try {

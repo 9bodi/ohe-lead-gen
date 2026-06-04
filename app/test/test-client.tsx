@@ -8,6 +8,7 @@ import {
   TimerRing,
   QuestionCard,
   DeclarativeCard,
+  Logo,
 } from "@/components/ui";
 import {
   PROCEDURAL_COUNT,
@@ -89,10 +90,7 @@ export function TestClient() {
     <main className="min-h-screen grid grid-cols-1 lg:grid-cols-[380px_1fr] bg-ohe-bg text-ohe-ink">
       {/* Sidebar */}
       <aside className="bg-ohe-panel-tint border-r border-ohe-line px-9 py-9 flex flex-col">
-        <div className="flex items-baseline gap-4 text-ohe-accent">
-          <span className="font-serif italic text-[22px]">OHé</span>
-          <span className="ohe-caption opacity-75">Diagnostic</span>
-        </div>
+        <Logo size={32} withLabel />
         <SidebarInfo test={test} />
       </aside>
 

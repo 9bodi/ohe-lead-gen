@@ -1,23 +1,37 @@
+import Image from "next/image";
+
 interface LogoProps {
-  /** Variante : "default" (ink) ou "accent" (bleu encre) */
-  variant?: "default" | "accent";
-  /** Taille du wordmark "OHé" */
-  size?: "sm" | "md";
+  /** Taille en pixels de la hauteur du logo */
+  size?: number;
+  /** Affichage en ligne avec ou sans label "Diagnostic" à côté */
+  withLabel?: boolean;
 }
 
-export function Logo({ variant = "default", size = "md" }: LogoProps) {
-  const colorClass = variant === "accent" ? "text-ohe-accent" : "text-ohe-ink";
-  const wordmarkSize = size === "sm" ? "text-[22px]" : "text-[26px]";
-  const captionOpacity = variant === "accent" ? "opacity-75" : "opacity-60";
+export function Logo({ size = 48, withLabel = false }: LogoProps) {
+  // Ratio approximatif du logo (largeur / hauteur)
+  // À ajuster si nécessaire selon les vraies dimensions du PNG
+  const aspectRatio = 1.05;
+  const width = Math.round(size * aspectRatio);
 
   return (
-    <div className={`flex items-baseline gap-4 ${colorClass}`}>
-      <span className={`font-serif italic ${wordmarkSize} tracking-tight`}>
-        OHé
-      </span>
-      <span className={`ohe-caption ${captionOpacity}`}>
-        Diagnostic
-      </span>
+    <div className="inline-flex items-center gap-4">
+      <Image
+        src="/images/ohe-logo.png"
+        alt="OHé — Orthographe Héros"
+        width={width}
+        height={size}
+        priority
+        style={{
+          width: "auto",
+          height: size,
+          maxWidth: "100%",
+        }}
+      />
+      {withLabel && (
+        <span className="ohe-caption text-ohe-accent opacity-75">
+          Diagnostic
+        </span>
+      )}
     </div>
   );
 }

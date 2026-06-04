@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Badge, Eyebrow, Portrait } from "@/components/ui";
+import { Badge, Eyebrow, Logo, Portrait } from "@/components/ui";
 import { TOTAL_COUNT } from "@/lib/questions";
 
 export default function Home() {
@@ -12,18 +12,13 @@ export default function Home() {
 
   return (
     <main className="min-h-screen grid grid-cols-1 lg:grid-cols-[1.15fr_1fr] bg-ohe-bg text-ohe-ink overflow-hidden">
-      {/* === Colonne gauche : hero éditorial === */}
+      {/* Colonne gauche : hero */}
       <div className="flex flex-col px-14 py-10">
-        {/* Header */}
-        <div className="flex items-baseline justify-between">
-          <div className="flex items-baseline gap-4 text-ohe-accent">
-            <span className="font-serif italic text-[26px] tracking-tight">OHé</span>
-            <span className="ohe-caption opacity-75">Diagnostic</span>
-          </div>
+        <div className="flex items-center justify-between">
+          <Logo size={48} withLabel />
           <Badge>Gratuit · 4 min</Badge>
         </div>
 
-        {/* Hero — collé en bas de colonne */}
         <div className="mt-auto">
           <Eyebrow tone="accent" className="mb-8">
             D I A G N O S T I C &nbsp; F R E E M I U M
@@ -64,7 +59,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* === Colonne droite : spec card === */}
+      {/* Colonne droite : spec card */}
       <div className="bg-ohe-panel-tint border-l border-ohe-line px-12 py-10 flex flex-col relative">
         <div className="ohe-eyebrow text-ohe-accent">
           ✱ Ce que vous obtenez
@@ -99,7 +94,6 @@ export default function Home() {
           })}
         </div>
 
-        {/* Watermark décoratif */}
         <div
           className="absolute pointer-events-none select-none font-serif"
           style={{

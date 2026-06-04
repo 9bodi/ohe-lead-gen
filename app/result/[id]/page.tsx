@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
-import { BlockResult } from "@/components/ui";
+import { BlockResult, Logo } from "@/components/ui";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -71,10 +71,7 @@ export default async function ResultPage({ params }: PageProps) {
     <main className="min-h-screen bg-ohe-bg text-ohe-ink">
       <div className="border-b border-ohe-line">
         <div className="max-w-[920px] mx-auto px-14 py-7 flex items-baseline justify-between">
-          <div className="flex items-baseline gap-4 text-ohe-accent">
-            <span className="font-serif italic text-[22px]">OHé</span>
-            <span className="ohe-caption opacity-75">Diagnostic</span>
-          </div>
+          <Logo size={32} withLabel />
           <div className="ohe-caption text-ohe-muted">BILAN · {formattedDate}</div>
         </div>
       </div>

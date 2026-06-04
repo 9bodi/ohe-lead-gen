@@ -3,7 +3,7 @@
 import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { FieldLabel, FieldInput, Checkbox } from "@/components/ui";
+import { FieldLabel, FieldInput, Checkbox, Logo } from "@/components/ui";
 import { leadFormSchema, type LeadFormInput } from "@/lib/schemas/lead";
 import { submitLead } from "@/app/actions/submit-lead";
 
@@ -121,10 +121,7 @@ export default function CapturePage() {
     <main className="min-h-screen bg-ohe-bg text-ohe-ink flex flex-col">
       {/* Header */}
       <div className="flex items-baseline justify-between px-14 py-6 border-b border-ohe-line">
-        <div className="flex items-baseline gap-4 text-ohe-accent">
-          <span className="font-serif italic text-[22px]">OHé</span>
-          <span className="ohe-caption opacity-75">Diagnostic</span>
-        </div>
+        <Logo size={32} withLabel />
         <div className="text-xs text-ohe-muted">
           <span className="ohe-eyebrow text-ohe-accent">Étape finale</span>
         </div>
