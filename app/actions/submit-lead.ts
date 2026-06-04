@@ -2,7 +2,8 @@
 
 import { prisma } from "@/lib/prisma";
 import { submitLeadSchema, type SubmitLeadInput } from "@/lib/schemas/lead";
-import { computeScore } from "@/lib/scoring/compute";
+import { computeScore, getResultMessage } from "@/lib/scoring/compute";
+import { sendResultEmail } from "@/lib/email/send";
 
 export type SubmitLeadResult =
   | { ok: true; resultId: string }
@@ -30,7 +31,7 @@ export async function submitLead(
 
   const data = parsed.data;
 
-  // === 2. Récupérer la campagne par défaut (web-freemium) ===
+  // === 2. Récupérer la campagne par défaut ===
   const campaign = await prisma.campaign.findUnique({
     where: { slug: "web-freemium" },
   });
@@ -44,8 +45,10 @@ export async function submitLead(
 
   // === 3. Calcul du score (côté serveur, authoritative) ===
   const score = computeScore({ answers: data.testPayload.answers });
+  const recommendation = getResultMessage(score);
 
   // === 4. Créer Lead + FreemiumResult en transaction ===
+  let resultId: string;
   try {
     const result = await prisma.$transaction(async (tx) => {
       const lead = await tx.lead.create({
@@ -78,7 +81,7 @@ export async function submitLead(
       return freemiumResult;
     });
 
-    return { ok: true, resultId: result.id };
+    resultId = result.id;
   } catch (e) {
     console.error("submitLead — db error:", e);
     return {
@@ -86,4 +89,24 @@ export async function submitLead(
       error: "Une erreur est survenue. Merci de réessayer.",
     };
   }
+
+  // === 5. Envoi de l'email (non bloquant — on log l'erreur mais on retourne quand même succès) ===
+  // Si l'envoi échoue, le lead reste créé en DB.
+  // L'équipe OHé pourra le contacter manuellement depuis le backoffice.
+  const emailResponse = await sendResultEmail({
+    to: data.email,
+    score,
+    recommendation,
+    resultId,
+  });
+
+  if (!emailResponse.ok) {
+    console.error("submitLead — email send failed:", emailResponse.error);
+    // On n'échoue PAS la submission pour autant. L'utilisateur voit son bilan
+    // sur la page web, et le lead est en base.
+  } else {
+    console.log("submitLead — email sent:", emailResponse.messageId);
+  }
+
+  return { ok: true, resultId };
 }
