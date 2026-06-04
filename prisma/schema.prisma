@@ -120,3 +120,36 @@ enum AdaptationProfile {
   adapted        // score 2-3/3 → formation adaptée
   not_adapted    // score 0-1/3 → formation peu adaptée
 }
+
+// ============================================================
+// ContactRequest — demande de contact B2B
+// ============================================================
+// Pour les visiteurs qui veulent un diagnostic complet
+// pour leur équipe / entreprise. Séparé de Lead car ce sont
+// des contacts qualifiés qui n'ont pas forcément passé le test.
+model ContactRequest {
+  id                String   @id @default(cuid())
+
+  // === Identité ===
+  firstName         String
+  lastName          String
+  email             String   // pro
+  company           String
+
+  // === Qualification facultative ===
+  jobTitle          String?  // rôle / fonction
+  teamSize          String?  // ex: "1-10", "11-50", "51-200", "200+"
+  message           String?  // texte libre, max 500 chars
+
+  // === Lien optionnel vers le test freemium passé ===
+  // Si le visiteur a fait le freemium avant de contacter, on lie
+  // les deux pour avoir le contexte complet côté backoffice
+  freemiumResultId  String?
+
+  // === Métadonnées ===
+  createdAt         DateTime @default(now())
+
+  @@index([email])
+  @@index([createdAt])
+  @@index([freemiumResultId])
+}
