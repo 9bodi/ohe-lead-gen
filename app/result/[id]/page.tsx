@@ -21,8 +21,7 @@ const LEVEL_TO_COLOR: Record<string, "red" | "orange" | "blue" | "green"> = {
   maitrise: "green",
 };
 
-const DIAGNOSTIC_COMPLET_URL = "#";
-const FORMATION_OHE_URL = "#";
+const FORMATION_OHE_URL = "https://orthographe-heros.fr";
 
 export default async function ResultPage({ params }: PageProps) {
   const { id } = await params;
@@ -172,17 +171,19 @@ export default async function ResultPage({ params }: PageProps) {
           <div className="ohe-eyebrow text-ohe-muted mb-4">Pour aller plus loin</div>
 
           <div>
-            <Link href={DIAGNOSTIC_COMPLET_URL} className={primaryCtaClass}>
-              <span>Faire le diagnostic complet</span>
+            <Link href={`/contact?from=${result.id}`} className={primaryCtaClass}>
+              <span>Diagnostiquer mon équipe avec OHé</span>
               <span className="text-base">{"\u2192"}</span>
             </Link>
-            <p className="mt-3 text-[13px] text-ohe-muted italic">48 questions, 6 compétences, niveau A/B1/B2/C détaillé</p>
+            <p className="mt-3 text-[13px] text-ohe-muted italic">
+              Évaluez vos collaborateurs sur les 6 compétences et identifiez les besoins de formation.
+            </p>
           </div>
 
           <div className="pt-4">
-            <Link href={FORMATION_OHE_URL} className={secondaryCtaClass}>
+            <a href={FORMATION_OHE_URL} target="_blank" rel="noopener noreferrer" className={secondaryCtaClass}>
               Découvrir la formation OHé
-            </Link>
+            </a>
           </div>
 
           <div className="pt-6">
