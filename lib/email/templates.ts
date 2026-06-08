@@ -23,10 +23,11 @@ interface ResultEmailProps {
   contactUrl: string;
   formationUrl: string;
   appUrl: string;
+  logoDataUrl: string;
 }
 
 export function renderResultEmail(props: ResultEmailProps): { html: string; text: string } {
-  const { recipientEmail, score, recommendation, resultUrl, contactUrl, formationUrl, appUrl } = props;
+  const { recipientEmail, score, recommendation, resultUrl, contactUrl, formationUrl, appUrl, logoDataUrl } = props;
 
   const block1Colors = LEVEL_COLORS[score.block1.color];
   const block2Colors = LEVEL_COLORS[score.block2.color];
@@ -47,7 +48,7 @@ export function renderResultEmail(props: ResultEmailProps): { html: string; text
           <!-- Header avec logo -->
           <tr>
             <td style="padding:32px 40px 24px; border-bottom:1px solid #15171C22;">
-              <img src="${appUrl}/images/ohe-logo.png" alt="OHé — Orthographe Héros" width="100" style="display:block; max-width:100px; height:auto;">
+              <img src="${logoDataUrl}" alt="OHé — Orthographe Héros" width="100" style="display:block; max-width:100px; height:auto;">
             </td>
           </tr>
 
