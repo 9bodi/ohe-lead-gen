@@ -20,12 +20,14 @@ const INITIAL_FORM: ContactFormInput = {
   firstName: "",
   lastName: "",
   email: "",
+  phone: "",
   company: "",
   jobTitle: "",
   teamSize: "",
   message: "",
   freemiumResultId: "",
 };
+
 
 function ContactPageContent() {
   const router = useRouter();
@@ -194,6 +196,24 @@ function ContactPageContent() {
                 error={errors.email}
                 disabled={isPending}
                 autoComplete="email"
+              />
+            </div>
+
+            {/* Téléphone (facultatif) */}
+            <div>
+              <FieldLabel htmlFor="phone" optional>
+                Téléphone
+              </FieldLabel>
+              <FieldInput
+                id="phone"
+                type="tel"
+                inputMode="tel"
+                value={form.phone || ""}
+                onChange={(e) => updateField("phone", e.target.value)}
+                placeholder="06 12 34 56 78"
+                error={errors.phone}
+                disabled={isPending}
+                autoComplete="tel"
               />
             </div>
 

@@ -7,6 +7,7 @@ export type ContactWithResult = {
   firstName: string;
   lastName: string;
   email: string;
+  phone: string | null;
   company: string;
   jobTitle: string | null;
   teamSize: string | null;
@@ -14,6 +15,7 @@ export type ContactWithResult = {
   freemiumResultId: string | null;
   createdAt: Date;
 };
+
 
 export interface ContactsQueryOptions {
   page?: number;

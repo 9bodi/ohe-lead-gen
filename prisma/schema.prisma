@@ -134,6 +134,7 @@ model ContactRequest {
   firstName         String
   lastName          String
   email             String   // pro
+  phone             String?  // facultatif, format libre
   company           String
 
   // === Qualification facultative ===

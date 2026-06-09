@@ -33,6 +33,7 @@ export async function GET(req: NextRequest) {
     "Prénom",
     "Nom",
     "Email",
+    "Téléphone",
     "Entreprise",
     "Rôle",
     "Taille équipe",
@@ -41,17 +42,19 @@ export async function GET(req: NextRequest) {
     "ID résultat freemium",
   ];
 
+
   const rows = contacts.map((c) => {
     const date = new Date(c.createdAt);
     const dateStr = date.toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit", year: "numeric" });
     const timeStr = date.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
 
-    return [
+        return [
       csvEscape(dateStr),
       csvEscape(timeStr),
       csvEscape(c.firstName),
       csvEscape(c.lastName),
       csvEscape(c.email),
+      csvEscape(c.phone),
       csvEscape(c.company),
       csvEscape(c.jobTitle),
       csvEscape(c.teamSize),
@@ -59,6 +62,7 @@ export async function GET(req: NextRequest) {
       csvEscape(c.freemiumResultId ? "Oui" : "Non"),
       csvEscape(c.freemiumResultId),
     ].join(";");
+
   });
 
   const csv = [headers.map(csvEscape).join(";"), ...rows].join("\n");

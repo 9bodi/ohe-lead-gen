@@ -1,7 +1,5 @@
 // Envoi d'emails via Resend
 import { Resend } from "resend";
-import { readFile } from "fs/promises";
-import path from "path";
 import { renderResultEmail } from "./templates";
 import type { ScoreResult } from "@/lib/scoring/compute";
 
@@ -14,24 +12,6 @@ interface SendResultEmailInput {
   resultId: string;
 }
 
-// === Cache du logo en mémoire (lu une seule fois au démarrage) ===
-let cachedLogoDataUrl: string | null = null;
-
-async function getLogoDataUrl(): Promise<string> {
-  if (cachedLogoDataUrl) return cachedLogoDataUrl;
-
-  try {
-    const logoPath = path.join(process.cwd(), "public", "images", "ohe-logo.png");
-    const buffer = await readFile(logoPath);
-    const base64 = buffer.toString("base64");
-    cachedLogoDataUrl = `data:image/png;base64,${base64}`;
-    return cachedLogoDataUrl;
-  } catch (e) {
-    console.error("Could not load logo for email:", e);
-    return ""; // fallback : pas de logo si erreur
-  }
-}
-
 export async function sendResultEmail(
   input: SendResultEmailInput
 ): Promise<{ ok: true; messageId: string } | { ok: false; error: string }> {
@@ -42,7 +22,10 @@ export async function sendResultEmail(
   const contactUrl = `${appUrl}/contact`;
   const formationUrl = "https://orthographe-heros.fr";
 
-  const logoDataUrl = await getLogoDataUrl();
+  // URL publique du logo, chargée par le client mail.
+  // Les clients (Gmail, Outlook, etc.) bloquent les images en data: URI (base64),
+  // il faut donc pointer vers une vraie URL hébergée publiquement.
+  const logoUrl = `${appUrl}/images/ohe-logo.png`;
 
   const { html, text } = renderResultEmail({
     recipientEmail: input.to,
@@ -52,7 +35,7 @@ export async function sendResultEmail(
     contactUrl,
     formationUrl,
     appUrl,
-    logoDataUrl,
+    logoUrl,
   });
 
   try {

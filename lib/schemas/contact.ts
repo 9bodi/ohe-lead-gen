@@ -35,6 +35,17 @@ export const contactFormSchema = z.object({
       "Merci d'utiliser un email professionnel"
     ),
 
+      phone: z
+    .string()
+    .trim()
+    .max(30, "Numéro trop long")
+    .refine(
+      (val) => val === "" || /\d{6,}/.test(val.replace(/\D/g, "")),
+      "Numéro de téléphone invalide"
+    )
+    .optional()
+    .or(z.literal("")),
+
   company: z
     .string()
     .trim()

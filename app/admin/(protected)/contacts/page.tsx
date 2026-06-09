@@ -106,11 +106,19 @@ export default async function ContactsPage({ searchParams }: PageProps) {
                       )}
                     </div>
 
-                    {/* Ligne 2 : email + date */}
+                                       {/* Ligne 2 : email + date */}
                     <div className="mt-2 flex items-center gap-4 text-[13px] text-ohe-muted">
                       <a href={`mailto:${contact.email}`} className="text-ohe-accent underline underline-offset-4 hover:no-underline">
                         {contact.email}
                       </a>
+                      {contact.phone && (
+                        <>
+                          <span>·</span>
+                          <a href={`tel:${contact.phone.replace(/\s/g, "")}`} className="text-ohe-accent underline underline-offset-4 hover:no-underline">
+                            {contact.phone}
+                          </a>
+                        </>
+                      )}
                       <span>·</span>
                       <span>
                         Reçue le {new Date(contact.createdAt).toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric" })}
@@ -118,6 +126,7 @@ export default async function ContactsPage({ searchParams }: PageProps) {
                         {new Date(contact.createdAt).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}
                       </span>
                     </div>
+
 
                     {/* Ligne 3 : badges (taille équipe + freemium) */}
                     <div className="mt-3 flex items-center gap-2 flex-wrap">

@@ -36,6 +36,7 @@ export async function submitContact(
         firstName: data.firstName,
         lastName: data.lastName,
         email: data.email,
+        phone: data.phone || null,
         company: data.company,
         jobTitle: data.jobTitle || null,
         teamSize: data.teamSize || null,
@@ -43,6 +44,7 @@ export async function submitContact(
         freemiumResultId: data.freemiumResultId || null,
       },
     });
+
 
     return { ok: true, contactId: contact.id };
   } catch (e) {
