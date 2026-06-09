@@ -13,3 +13,4 @@ export { QuestionCard } from "./QuestionCard";
 export { DeclarativeCard } from "./DeclarativeCard";
 export { BlockResult } from "./BlockResult";
 export { LeadFilters } from "./LeadFilters";
+export { ContactFilters } from "./ContactFilters";
