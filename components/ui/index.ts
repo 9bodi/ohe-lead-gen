@@ -3,7 +3,6 @@ export { Eyebrow } from "./Eyebrow";
 export { PrimaryButton } from "./PrimaryButton";
 export { Portrait } from "./Portrait";
 export { Badge } from "./Badge";
-export { Header } from "./Header";
 export { ProgressDots } from "./ProgressDots";
 export { TimerRing } from "./TimerRing";
 export { FieldLabel } from "./FieldLabel";
