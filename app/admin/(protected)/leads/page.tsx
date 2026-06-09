@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { Logo } from "@/components/ui";
+import { Logo, LeadFilters } from "@/components/ui";
 import { logoutAdmin } from "@/app/actions/admin-auth";
-import { getLeads } from "@/lib/admin/leads-query";
+import { getLeads, type LeadsQueryOptions } from "@/lib/admin/leads-query";
 
 const LEVEL_LABELS: Record<string, string> = {
   non_maitrise: "Non maîtrisé",
@@ -18,14 +18,36 @@ const LEVEL_DOT: Record<string, string> = {
 };
 
 interface PageProps {
-  searchParams: Promise<{ page?: string }>;
+  searchParams: Promise<{
+    page?: string;
+    search?: string;
+    adaptation?: string;
+    marketing?: string;
+    period?: string;
+  }>;
 }
 
 export default async function LeadsPage({ searchParams }: PageProps) {
   const sp = await searchParams;
   const page = sp.page ? parseInt(sp.page, 10) : 1;
 
-  const { leads, total, totalPages } = await getLeads({ page, perPage: 50 });
+  const options: LeadsQueryOptions = {
+    page,
+    perPage: 50,
+    search: sp.search,
+    adaptation: sp.adaptation as LeadsQueryOptions["adaptation"],
+    marketing: sp.marketing as LeadsQueryOptions["marketing"],
+    period: sp.period as LeadsQueryOptions["period"],
+  };
+
+  const { leads, total, totalPages } = await getLeads(options);
+
+  // Conserver les filtres dans les liens de pagination
+  const currentParams = new URLSearchParams();
+  if (sp.search) currentParams.set("search", sp.search);
+  if (sp.adaptation) currentParams.set("adaptation", sp.adaptation);
+  if (sp.marketing) currentParams.set("marketing", sp.marketing);
+  if (sp.period) currentParams.set("period", sp.period);
 
   return (
     <main className="min-h-screen bg-ohe-bg text-ohe-ink">
@@ -56,25 +78,27 @@ export default async function LeadsPage({ searchParams }: PageProps) {
 
       {/* Contenu */}
       <div className="max-w-[1400px] mx-auto px-14 py-10">
-        <div className="flex items-end justify-between mb-8">
+        <div className="flex items-end justify-between mb-6">
           <div>
             <div className="ohe-eyebrow text-ohe-accent">✱ Administration</div>
             <h1 className="mt-3 text-[40px] leading-[1.05] tracking-[-0.022em] font-normal text-balance">
               Leads <span className="font-serif italic text-ohe-accent">freemium</span>
             </h1>
             <p className="mt-2 text-sm text-ohe-muted">
-              {total} {total > 1 ? "leads" : "lead"} au total
+              {total} {total > 1 ? "leads" : "lead"} {currentParams.toString() ? "correspondants aux filtres" : "au total"}
             </p>
           </div>
-          <div className="text-sm text-ohe-muted italic">
-            Export CSV et filtres bientôt disponibles
-          </div>
         </div>
+
+        {/* Barre de filtres */}
+        <LeadFilters />
 
         {/* Tableau */}
         {leads.length === 0 ? (
           <div className="bg-ohe-panel-tint border border-ohe-line rounded-2xl px-10 py-16 text-center">
-            <p className="text-ohe-muted">Aucun lead pour l&apos;instant.</p>
+            <p className="text-ohe-muted">
+              {currentParams.toString() ? "Aucun lead ne correspond à ces filtres." : "Aucun lead pour l'instant."}
+            </p>
           </div>
         ) : (
           <div className="bg-ohe-panel border border-ohe-line rounded-2xl overflow-hidden">
@@ -163,12 +187,12 @@ export default async function LeadsPage({ searchParams }: PageProps) {
             </div>
             <div className="flex items-center gap-2">
               {page > 1 && (
-                <Link href={`/admin/leads?page=${page - 1}`} className="px-4 py-2 rounded-full border border-ohe-line text-ohe-ink hover:bg-ohe-panel-tint transition-colors">
+                <Link href={`/admin/leads?${currentParams.toString()}${currentParams.toString() ? "&" : ""}page=${page - 1}`} className="px-4 py-2 rounded-full border border-ohe-line text-ohe-ink hover:bg-ohe-panel-tint transition-colors">
                   ← Précédent
                 </Link>
               )}
               {page < totalPages && (
-                <Link href={`/admin/leads?page=${page + 1}`} className="px-4 py-2 rounded-full border border-ohe-line text-ohe-ink hover:bg-ohe-panel-tint transition-colors">
+                <Link href={`/admin/leads?${currentParams.toString()}${currentParams.toString() ? "&" : ""}page=${page + 1}`} className="px-4 py-2 rounded-full border border-ohe-line text-ohe-ink hover:bg-ohe-panel-tint transition-colors">
                   Suivant →
                 </Link>
               )}
