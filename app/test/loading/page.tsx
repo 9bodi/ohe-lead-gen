@@ -15,9 +15,12 @@ function LoadingContent() {
     "Préparation de votre relevé...",
   ];
   const [messageIndex, setMessageIndex] = useState(0);
+  const [visible, setVisible] = useState(true);
+
+  const MESSAGE_DURATION = 1200; // ms par message
+  const TOTAL_DURATION = messages.length * MESSAGE_DURATION; // 3600 ms
 
   useEffect(() => {
-    // Redirige vers le résultat après 2.5 sec
     if (!resultId) {
       router.push("/");
       return;
@@ -25,30 +28,33 @@ function LoadingContent() {
 
     const redirectTimer = setTimeout(() => {
       router.push(`/result/${resultId}`);
-    }, 2500);
+    }, TOTAL_DURATION);
 
-    // Rotation des messages toutes les 850ms
+    // Rotation des messages avec fondu
     const messageTimer = setInterval(() => {
-      setMessageIndex((i) => (i + 1) % messages.length);
-    }, 850);
+      // 1) fondu sortant
+      setVisible(false);
+      // 2) changement du texte + fondu entrant, après la fin du fade out
+      setTimeout(() => {
+        setMessageIndex((i) => (i + 1) % messages.length);
+        setVisible(true);
+      }, 300);
+    }, MESSAGE_DURATION);
 
     return () => {
       clearTimeout(redirectTimer);
       clearInterval(messageTimer);
     };
-  }, [resultId, router, messages.length]);
+  }, [resultId, router, messages.length, TOTAL_DURATION]);
 
   if (!resultId) return null;
 
   return (
-    <main className="min-h-screen grid place-items-center bg-ohe-bg text-ohe-ink relative overflow-hidden">
+    <main className="min-h-screen grid place-items-center bg-ohe-bg text-ohe-ink relative overflow-hidden px-6">
       {/* Watermark décoratif */}
       <div
-        className="absolute pointer-events-none select-none font-serif"
+        className="absolute pointer-events-none select-none font-serif text-[220px] sm:text-[320px] lg:text-[420px] -right-10 -bottom-16 sm:-right-14 sm:-bottom-24 lg:-right-[60px] lg:-bottom-[120px]"
         style={{
-          right: -60,
-          bottom: -120,
-          fontSize: 420,
           lineHeight: 1,
           color: "var(--color-ohe-accent-soft)",
         }}
@@ -57,8 +63,9 @@ function LoadingContent() {
       </div>
 
       <div className="text-center max-w-md relative z-10">
-        <div className="ohe-eyebrow text-ohe-accent mb-8">
-          ✱ Votre résultat est en préparation
+        <div className="text-ohe-accent mb-8 flex items-center justify-center gap-2 text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.18em] sm:tracking-[0.28em]">
+          <span className="opacity-65">✱</span>
+          <span>Votre résultat est en préparation</span>
         </div>
 
         {/* Animation : 3 points qui pulsent */}
@@ -68,17 +75,17 @@ function LoadingContent() {
               key={i}
               className="w-2 h-2 rounded-full bg-ohe-accent"
               style={{
-                animation: "ohePulse 1.4s ease-in-out infinite",
+                animation: "ohePulse 1.6s ease-in-out infinite",
                 animationDelay: `${i * 0.2}s`,
               }}
             />
           ))}
         </div>
 
-        {/* Message qui change */}
+        {/* Message qui change avec fondu */}
         <p
-          className="text-ohe-muted text-base font-serif italic transition-opacity duration-500"
-          style={{ minHeight: "1.5em" }}
+          className="text-ohe-muted text-base font-serif italic transition-opacity duration-300 px-2"
+          style={{ minHeight: "1.5em", opacity: visible ? 1 : 0 }}
         >
           {messages[messageIndex]}
         </p>

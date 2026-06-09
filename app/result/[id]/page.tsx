@@ -62,26 +62,26 @@ export default async function ResultPage({ params }: PageProps) {
     })
     .toUpperCase();
 
-  const primaryCtaClass = "inline-flex items-center gap-3 px-7 py-4 rounded-full text-sm font-medium bg-ohe-accent text-ohe-accent-ink hover:bg-ohe-ink transition-colors";
-  const secondaryCtaClass = "inline-flex items-center gap-3 px-6 py-3.5 rounded-full text-sm font-medium bg-transparent text-ohe-accent border border-ohe-accent hover:bg-ohe-accent-soft transition-colors";
+  const primaryCtaClass = "inline-flex items-center justify-center gap-3 w-full sm:w-auto px-7 py-4 rounded-full text-sm font-medium bg-ohe-accent text-ohe-accent-ink hover:bg-ohe-ink transition-colors";
+  const secondaryCtaClass = "inline-flex items-center justify-center gap-3 w-full sm:w-auto px-6 py-3.5 rounded-full text-sm font-medium bg-transparent text-ohe-accent border border-ohe-accent hover:bg-ohe-accent-soft transition-colors";
   const tertiaryCtaClass = "text-sm text-ohe-muted underline underline-offset-4 hover:text-ohe-ink transition-colors";
 
   return (
     <main className="min-h-screen bg-ohe-bg text-ohe-ink">
       <div className="border-b border-ohe-line">
-        <div className="max-w-[920px] mx-auto px-14 py-7 flex items-baseline justify-between">
+        <div className="max-w-[920px] mx-auto px-6 py-5 sm:px-10 lg:px-14 lg:py-7 flex items-baseline justify-between gap-4">
           <Logo size={32} withLabel />
-          <div className="ohe-caption text-ohe-muted">BILAN · {formattedDate}</div>
+          <div className="ohe-caption text-ohe-muted text-right">BILAN · {formattedDate}</div>
         </div>
       </div>
 
-      <div className="max-w-[920px] mx-auto px-14 py-12 space-y-12">
+      <div className="max-w-[920px] mx-auto px-6 py-10 sm:px-10 lg:px-14 lg:py-12 space-y-12">
         <div>
-          <div className="ohe-eyebrow text-ohe-accent inline-flex items-center gap-3">
+          <div className="text-ohe-accent flex items-center gap-3 text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.18em] sm:tracking-[0.32em]">
             <span className="opacity-65">✱</span>
-            <span>B I L A N &nbsp; D I A G N O S T I C</span>
+            <span>Bilan diagnostic</span>
           </div>
-          <h1 className="mt-6 text-[56px] leading-[1.05] tracking-[-0.022em] font-normal text-balance">
+          <h1 className="mt-6 text-[34px] sm:text-[44px] lg:text-[56px] leading-[1.07] lg:leading-[1.05] tracking-[-0.022em] font-normal text-balance">
             Votre bilan <span className="font-serif italic text-ohe-accent">en deux compétences</span>.
           </h1>
           <p className="mt-4 text-base text-ohe-muted text-pretty max-w-[560px]">
@@ -119,9 +119,9 @@ export default async function ResultPage({ params }: PageProps) {
           </div>
         </div>
 
-        <div className="bg-ohe-panel-tint border border-ohe-line rounded-2xl px-10 py-8 space-y-6">
+        <div className="bg-ohe-panel-tint border border-ohe-line rounded-2xl px-5 py-6 sm:px-10 sm:py-8 space-y-6">
           <div className="ohe-eyebrow text-ohe-muted">Niveau global</div>
-          <div className="flex items-end justify-between gap-8">
+          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-8">
             <div className="flex-1">
               <div className="text-[13px] text-ohe-muted mb-2">Lettre attribuée</div>
               <div className="relative inline-block">
@@ -140,7 +140,7 @@ export default async function ResultPage({ params }: PageProps) {
               </div>
               <div className="text-[13px] text-ohe-muted italic mt-2">Disponible avec le diagnostic complet</div>
             </div>
-            <div className="flex-[2]">
+            <div className="flex-[2] w-full">
               <div className="text-[13px] text-ohe-muted mb-3">Échelle de niveau</div>
               <div className="grid grid-cols-4 gap-0 border border-ohe-line rounded-lg overflow-hidden opacity-40">
                 {[
@@ -151,9 +151,9 @@ export default async function ResultPage({ params }: PageProps) {
                 ].map((item, i) => (
                   <div
                     key={item.letter}
-                    className={`px-3 py-3 text-center bg-ohe-panel ${i > 0 ? "border-l border-ohe-line" : ""}`}
+                    className={`px-2 py-3 sm:px-3 text-center bg-ohe-panel ${i > 0 ? "border-l border-ohe-line" : ""}`}
                   >
-                    <div className="font-serif italic text-[20px] text-ohe-ink">{item.letter}</div>
+                    <div className="font-serif italic text-[18px] sm:text-[20px] text-ohe-ink">{item.letter}</div>
                     <div className="text-[10px] text-ohe-muted mt-1">{item.range}</div>
                   </div>
                 ))}
@@ -164,7 +164,7 @@ export default async function ResultPage({ params }: PageProps) {
 
         <div>
           <div className="ohe-eyebrow text-ohe-accent mb-4">Recommandation</div>
-          <p className="text-[18px] leading-[1.55] text-ohe-ink text-pretty max-w-[680px]">{recommendation}</p>
+          <p className="text-[17px] sm:text-[18px] leading-[1.55] text-ohe-ink text-pretty max-w-[680px]">{recommendation}</p>
         </div>
 
         <div className="border-t border-ohe-line pt-10 space-y-4">
@@ -194,7 +194,7 @@ export default async function ResultPage({ params }: PageProps) {
         </div>
 
         <div className="pt-8 border-t border-ohe-line text-[12px] text-ohe-muted">
-          Une copie de ce bilan a été envoyée à <span className="text-ohe-ink">{result.lead.email}</span>.
+          Une copie de ce bilan a été envoyée à <span className="text-ohe-ink break-all">{result.lead.email}</span>.
         </div>
       </div>
     </main>

@@ -120,7 +120,7 @@ export default function CapturePage() {
   return (
     <main className="min-h-screen bg-ohe-bg text-ohe-ink flex flex-col">
       {/* Header */}
-      <div className="flex items-baseline justify-between px-14 py-6 border-b border-ohe-line">
+      <div className="flex items-baseline justify-between px-6 py-5 sm:px-10 lg:px-14 lg:py-6 border-b border-ohe-line">
         <Logo size={32} withLabel />
         <div className="text-xs text-ohe-muted">
           <span className="ohe-eyebrow text-ohe-accent">Étape finale</span>
@@ -128,14 +128,16 @@ export default function CapturePage() {
       </div>
 
       {/* Contenu centré */}
-      <div className="flex-1 flex items-center justify-center px-14 py-12">
+      <div className="flex-1 flex items-center justify-center px-6 py-10 sm:px-10 lg:px-14 lg:py-12">
         <div className="w-full max-w-[560px]">
-          <div className="ohe-eyebrow text-ohe-accent inline-flex items-center gap-3">
+                              <div className="text-ohe-accent flex items-center gap-3 text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.18em] sm:tracking-[0.32em]">
             <span className="opacity-65">✱</span>
-            <span>V O T R E &nbsp; R É S U L T A T &nbsp; E S T &nbsp; P R Ê T</span>
+            <span>Votre résultat est prêt</span>
           </div>
 
-          <h1 className="mt-6 text-[52px] leading-[1.05] tracking-[-0.022em] font-normal text-balance">
+
+
+          <h1 className="mt-6 text-[34px] sm:text-[44px] lg:text-[52px] leading-[1.07] lg:leading-[1.05] tracking-[-0.022em] font-normal text-balance">
             Où souhaitez-vous{" "}
             <span className="font-serif italic text-ohe-accent">
               le recevoir
@@ -149,7 +151,7 @@ export default function CapturePage() {
           </p>
 
           {/* Form */}
-          <div className="mt-9 bg-ohe-panel-tint border border-ohe-line rounded-2xl px-8 py-8 space-y-6">
+          <div className="mt-8 lg:mt-9 bg-ohe-panel-tint border border-ohe-line rounded-2xl px-5 py-6 sm:px-8 sm:py-8 space-y-6">
             <div>
               <FieldLabel htmlFor="email">Email</FieldLabel>
               <FieldInput
@@ -181,12 +183,12 @@ export default function CapturePage() {
               <span className="text-ohe-ink">OHé</span> (facultatif).
             </Checkbox>
 
-            <div className="flex items-center justify-between pt-2">
+            <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-4 pt-2">
               <button
                 type="button"
                 onClick={() => router.push("/")}
                 disabled={isPending}
-                className="text-sm text-ohe-muted underline underline-offset-4 hover:text-ohe-ink transition-colors disabled:opacity-50"
+                className="text-sm text-ohe-muted underline underline-offset-4 hover:text-ohe-ink transition-colors disabled:opacity-50 text-center sm:text-left"
               >
                 ← Annuler
               </button>
@@ -195,7 +197,7 @@ export default function CapturePage() {
                 onClick={handleSubmit}
                 disabled={isPending}
                 className={`
-                  inline-flex items-center gap-3 px-6 py-3.5 rounded-full
+                  inline-flex items-center justify-center gap-3 w-full sm:w-auto px-6 py-3.5 rounded-full
                   text-sm font-medium tracking-[0.01em]
                   bg-ohe-accent text-ohe-accent-ink border border-transparent
                   hover:bg-ohe-ink transition-colors cursor-pointer

@@ -43,10 +43,10 @@ export function TestClient() {
     }
   }, [test.phase, test.answers, test.startedAt, router]);
 
-  // === Phase "loading" — court écran le temps que les questions soient mélangées ===
+  // === Phase "loading" ===
   if (test.phase === "loading") {
     return (
-      <main className="min-h-screen grid place-items-center bg-ohe-bg text-ohe-ink">
+      <main className="min-h-screen grid place-items-center bg-ohe-bg text-ohe-ink px-6">
         <div className="text-center">
           <div className="ohe-eyebrow text-ohe-accent mb-4">✱ Préparation</div>
           <p className="text-ohe-muted text-sm">Chargement du diagnostic...</p>
@@ -58,10 +58,10 @@ export function TestClient() {
   // === Transition entre Bloc 1 et Bloc 2 ===
   if (test.phase === "transition") {
     return (
-      <main className="min-h-screen grid place-items-center bg-ohe-bg text-ohe-ink">
+      <main className="min-h-screen grid place-items-center bg-ohe-bg text-ohe-ink px-6">
         <div className="text-center max-w-md">
           <div className="ohe-eyebrow text-ohe-accent mb-6">✱ Partie 2 sur 2</div>
-          <h2 className="text-[44px] leading-[1.05] tracking-[-0.02em] font-normal text-balance">
+          <h2 className="text-[32px] sm:text-[44px] leading-[1.05] tracking-[-0.02em] font-normal text-balance">
             Maintenant,{" "}
             <span className="font-serif italic text-ohe-accent">la conjugaison</span>.
           </h2>
@@ -76,7 +76,7 @@ export function TestClient() {
   // === Test completed pendant la redirection ===
   if (test.phase === "completed") {
     return (
-      <main className="min-h-screen grid place-items-center bg-ohe-bg text-ohe-ink">
+      <main className="min-h-screen grid place-items-center bg-ohe-bg text-ohe-ink px-6">
         <div className="text-center">
           <div className="ohe-eyebrow text-ohe-accent mb-4">✱ Test terminé</div>
           <p className="text-ohe-muted text-sm">Préparation de votre résultat...</p>
@@ -87,17 +87,25 @@ export function TestClient() {
 
   // === Écran de question (procédural OU déclaratif) ===
   return (
-    <main className="min-h-screen grid grid-cols-1 lg:grid-cols-[380px_1fr] bg-ohe-bg text-ohe-ink">
-      {/* Sidebar */}
-      <aside className="bg-ohe-panel-tint border-r border-ohe-line px-9 py-9 flex flex-col">
+    <main className="min-h-screen flex flex-col lg:grid lg:grid-cols-[380px_1fr] bg-ohe-bg text-ohe-ink">
+      {/* Sidebar — version desktop complète */}
+      <aside className="hidden lg:flex bg-ohe-panel-tint border-r border-ohe-line px-9 py-9 flex-col">
         <Logo size={32} withLabel />
         <SidebarInfo test={test} />
       </aside>
 
+      {/* Barre compacte — version mobile / tablette */}
+      <div className="lg:hidden bg-ohe-panel-tint border-b border-ohe-line px-6 py-4 sm:px-10">
+        <div className="flex items-center justify-between gap-4">
+          <Logo size={28} />
+          <MobileProgress test={test} />
+        </div>
+      </div>
+
       {/* Main */}
-      <section className="px-16 py-10 flex flex-col relative">
+      <section className="px-6 py-8 sm:px-10 lg:px-16 lg:py-10 flex flex-col relative">
         {test.current.kind === "procedural" && (
-          <div className="absolute top-9 right-14">
+          <div className="absolute top-6 right-6 sm:top-8 sm:right-10 lg:top-9 lg:right-14">
             <TimerRing
               secondsRemaining={test.current.secondsLeft}
               totalSeconds={PROCEDURAL_SECONDS_PER_QUESTION}
@@ -107,7 +115,7 @@ export function TestClient() {
 
         <CurrentEyebrow test={test} />
 
-        <div className="mt-10 flex-1 flex flex-col">
+        <div className="mt-8 lg:mt-10 flex-1 flex flex-col">
           {test.current.kind === "procedural" && (
             <QuestionCard
               key={test.current.question.id}
@@ -127,6 +135,40 @@ export function TestClient() {
       </section>
     </main>
   );
+}
+
+// Barre de progression compacte affichée en haut sur mobile/tablette
+function MobileProgress({ test }: { test: ReturnType<typeof useTest> }) {
+  if (test.current.kind === "procedural") {
+    const num = test.proceduralIndex + 1;
+    const blockLabel = test.phase === "block1" ? "Accords" : "Conjugaison";
+    return (
+      <div className="flex items-center gap-3 text-right">
+        <span className="text-[11px] uppercase tracking-[0.2em] text-ohe-muted">
+          {blockLabel}
+        </span>
+        <span className="font-serif italic text-ohe-accent text-[22px] leading-none">
+          {String(num).padStart(2, "0")}
+          <span className="text-ohe-muted text-[14px]"> / {PROCEDURAL_COUNT}</span>
+        </span>
+      </div>
+    );
+  }
+  if (test.current.kind === "declarative") {
+    const num = test.declarativeIndex + 1;
+    return (
+      <div className="flex items-center gap-3 text-right">
+        <span className="text-[11px] uppercase tracking-[0.2em] text-ohe-muted">
+          Profil
+        </span>
+        <span className="font-serif italic text-ohe-accent text-[22px] leading-none">
+          {String(num).padStart(2, "0")}
+          <span className="text-ohe-muted text-[14px]"> / {DECLARATIVE_COUNT}</span>
+        </span>
+      </div>
+    );
+  }
+  return null;
 }
 
 function SidebarInfo({ test }: { test: ReturnType<typeof useTest> }) {
@@ -218,7 +260,7 @@ function CurrentEyebrow({ test }: { test: ReturnType<typeof useTest> }) {
         ? "Accords des mots"
         : "Conjugaison";
     return (
-      <div className="ohe-eyebrow text-ohe-accent inline-flex items-center gap-3 mt-6">
+      <div className="ohe-eyebrow text-ohe-accent inline-flex items-center gap-3 mt-2 lg:mt-6 pr-20">
         <span className="opacity-65">✱</span>
         <span style={{ letterSpacing: "0.32em", textTransform: "uppercase" }}>
           {label}
@@ -228,7 +270,7 @@ function CurrentEyebrow({ test }: { test: ReturnType<typeof useTest> }) {
   }
   if (test.current.kind === "declarative") {
     return (
-      <div className="ohe-eyebrow text-ohe-accent inline-flex items-center gap-3 mt-6">
+      <div className="ohe-eyebrow text-ohe-accent inline-flex items-center gap-3 mt-2 lg:mt-6">
         <span className="opacity-65">✱</span>
         <span>Votre profil</span>
       </div>

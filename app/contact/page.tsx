@@ -88,18 +88,19 @@ function ContactPageContent() {
   if (submitted) {
     return (
       <main className="min-h-screen bg-ohe-bg text-ohe-ink flex flex-col">
-        <div className="border-b border-ohe-line">
-          <div className="max-w-[920px] mx-auto px-14 py-7">
+                <div className="border-b border-ohe-line">
+          <div className="max-w-[920px] mx-auto px-6 py-5 sm:px-10 lg:px-14 lg:py-7">
             <Logo size={32} withLabel />
           </div>
         </div>
 
-        <div className="flex-1 flex items-center justify-center px-14 py-16">
+        <div className="flex-1 flex items-center justify-center px-6 py-12 sm:px-10 lg:px-14 lg:py-16">
           <div className="max-w-[560px] text-center">
             <div className="ohe-eyebrow text-ohe-accent mb-6">
               ✱ Demande envoyée
             </div>
-            <h1 className="text-[52px] leading-[1.05] tracking-[-0.022em] font-normal text-balance">
+            <h1 className="text-[34px] sm:text-[44px] lg:text-[52px] leading-[1.07] lg:leading-[1.05] tracking-[-0.022em] font-normal text-balance">
+
               Merci !{" "}
               <span className="font-serif italic text-ohe-accent">
                 Nous revenons vers vous
@@ -128,26 +129,28 @@ function ContactPageContent() {
   // === Formulaire ===
   return (
     <main className="min-h-screen bg-ohe-bg text-ohe-ink flex flex-col">
-      <div className="border-b border-ohe-line">
-        <div className="max-w-[920px] mx-auto px-14 py-7 flex items-baseline justify-between">
+            <div className="border-b border-ohe-line">
+        <div className="max-w-[920px] mx-auto px-6 py-5 sm:px-10 lg:px-14 lg:py-7 flex items-baseline justify-between gap-4">
           <Logo size={32} withLabel />
           <div className="ohe-caption text-ohe-muted">Contact B2B</div>
         </div>
       </div>
 
-      <div className="flex-1 px-14 py-12">
+
+            <div className="flex-1 px-6 py-10 sm:px-10 lg:px-14 lg:py-12">
         <div className="max-w-[680px] mx-auto">
-          <div className="ohe-eyebrow text-ohe-accent inline-flex items-center gap-3">
+          <div className="text-ohe-accent flex items-center gap-3 text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.18em] sm:tracking-[0.32em]">
             <span className="opacity-65">✱</span>
-            <span>D I A G N O S T I C &nbsp; D &apos; É Q U I P E</span>
+            <span>Diagnostic d&apos;équipe</span>
           </div>
 
-          <h1 className="mt-6 text-[48px] leading-[1.05] tracking-[-0.022em] font-normal text-balance">
+          <h1 className="mt-6 text-[32px] sm:text-[40px] lg:text-[48px] leading-[1.08] lg:leading-[1.05] tracking-[-0.022em] font-normal text-balance">
             Échangeons sur votre{" "}
             <span className="font-serif italic text-ohe-accent">
               projet de diagnostic
             </span>.
           </h1>
+
 
           <p className="mt-5 text-base text-ohe-muted text-pretty max-w-[520px]">
             Un conseiller OHé prendra contact avec vous pour comprendre vos
@@ -155,9 +158,11 @@ function ContactPageContent() {
             définir ensemble le format adapté à votre équipe.
           </p>
 
-          <div className="mt-9 bg-ohe-panel-tint border border-ohe-line rounded-2xl px-8 py-8 space-y-6">
+                    <div className="mt-8 lg:mt-9 bg-ohe-panel-tint border border-ohe-line rounded-2xl px-5 py-6 sm:px-8 sm:py-8 space-y-6">
+
             {/* Prénom + Nom */}
-            <div className="grid grid-cols-2 gap-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
+
               <div>
                 <FieldLabel htmlFor="firstName">Prénom</FieldLabel>
                 <FieldInput
@@ -299,10 +304,10 @@ function ContactPageContent() {
             </div>
 
             {/* Boutons */}
-            <div className="flex items-center justify-between pt-2">
+                        <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-4 pt-2">
               <Link
                 href="/"
-                className="text-sm text-ohe-muted underline underline-offset-4 hover:text-ohe-ink transition-colors"
+                className="text-sm text-ohe-muted underline underline-offset-4 hover:text-ohe-ink transition-colors text-center sm:text-left"
               >
                 ← Annuler
               </Link>
@@ -310,12 +315,13 @@ function ContactPageContent() {
                 type="button"
                 onClick={handleSubmit}
                 disabled={isPending}
-                className="inline-flex items-center gap-3 px-6 py-3.5 rounded-full text-sm font-medium tracking-[0.01em] bg-ohe-accent text-ohe-accent-ink border border-transparent hover:bg-ohe-ink transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+                className="inline-flex items-center justify-center gap-3 w-full sm:w-auto px-6 py-3.5 rounded-full text-sm font-medium tracking-[0.01em] bg-ohe-accent text-ohe-accent-ink border border-transparent hover:bg-ohe-ink transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 {isPending ? "Envoi..." : "Envoyer ma demande"}
                 <span>→</span>
               </button>
             </div>
+
           </div>
         </div>
       </div>

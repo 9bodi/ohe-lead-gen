@@ -1,6 +1,5 @@
 import type { BlockLevel } from "@/lib/scoring/compute";
 
-// Mapping des couleurs vers les classes Tailwind
 const COLOR_CLASSES = {
   red: {
     dot: "bg-red-500",
@@ -46,15 +45,15 @@ type BlockResultProps = VisibleProps | LockedProps;
 export function BlockResult(props: BlockResultProps) {
   if (props.mode === "locked") {
     return (
-      <div className="grid grid-cols-[40px_1fr_auto] items-center gap-4 py-4 border-b border-ohe-line-soft">
+      <div className="grid grid-cols-[32px_1fr] sm:grid-cols-[40px_1fr_auto] items-center gap-3 sm:gap-4 py-4 border-b border-ohe-line-soft">
         <div className="ohe-caption text-ohe-muted opacity-40">{props.num}</div>
         <div className="flex items-center gap-3">
-          <span className="font-serif italic text-[18px] text-ohe-muted opacity-50">
+          <span className="font-serif italic text-[17px] sm:text-[18px] text-ohe-muted opacity-50">
             {props.title}
           </span>
           <LockIcon />
         </div>
-        <div className="text-[12px] text-ohe-muted italic opacity-60">
+        <div className="hidden sm:block text-[12px] text-ohe-muted italic opacity-60">
           Disponible avec le diagnostic complet
         </div>
       </div>
@@ -64,21 +63,24 @@ export function BlockResult(props: BlockResultProps) {
   const colors = COLOR_CLASSES[props.color];
 
   return (
-    <div className="grid grid-cols-[40px_1fr_auto_auto] items-center gap-4 py-4 border-b border-ohe-line">
+    <div className="grid grid-cols-[32px_1fr] sm:grid-cols-[40px_1fr_auto_auto] items-center gap-x-3 gap-y-2 sm:gap-4 py-4 border-b border-ohe-line">
       <div className="ohe-caption text-ohe-accent">{props.num}</div>
       <div className="flex items-center gap-3">
-        <span className={`w-2 h-2 rounded-full ${colors.dot}`} />
-        <span className="font-serif italic text-[20px] text-ohe-ink">
+        <span className={`w-2 h-2 rounded-full shrink-0 ${colors.dot}`} />
+        <span className="font-serif italic text-[18px] sm:text-[20px] text-ohe-ink">
           {props.title}
         </span>
       </div>
-      <div className="font-serif italic text-[18px] text-ohe-ink tabular-nums">
-        {props.correct} / {props.total}
-      </div>
-      <div
-        className={`px-3 py-1 text-[11px] font-medium uppercase tracking-[0.12em] rounded-full border ${colors.badge}`}
-      >
-        {props.label}
+      {/* Score + badge : sous le titre sur mobile, en ligne dès sm */}
+      <div className="col-start-2 sm:col-start-3 flex items-center gap-3 sm:gap-4 sm:contents">
+        <div className="font-serif italic text-[16px] sm:text-[18px] text-ohe-ink tabular-nums">
+          {props.correct} / {props.total}
+        </div>
+        <div
+          className={`px-3 py-1 text-[11px] font-medium uppercase tracking-[0.12em] rounded-full border ${colors.badge}`}
+        >
+          {props.label}
+        </div>
       </div>
     </div>
   );
@@ -91,7 +93,7 @@ function LockIcon() {
       height="14"
       viewBox="0 0 14 14"
       fill="none"
-      className="text-ohe-muted opacity-60"
+      className="text-ohe-muted opacity-60 shrink-0"
     >
       <rect
         x="2"
