@@ -4,7 +4,6 @@ import { logoutAdmin } from "@/app/actions/admin-auth";
 import { prisma } from "@/lib/prisma";
 
 export default async function AdminHomePage() {
-  // Stats rapides
   const [leadsCount, contactsCount, resultsCount] = await Promise.all([
     prisma.lead.count(),
     prisma.contactRequest.count(),
@@ -14,8 +13,21 @@ export default async function AdminHomePage() {
   return (
     <main className="min-h-screen bg-ohe-bg text-ohe-ink">
       <div className="border-b border-ohe-line">
-        <div className="max-w-[1200px] mx-auto px-14 py-7 flex items-center justify-between">
-          <Logo size={32} withLabel />
+        <div className="max-w-[1400px] mx-auto px-14 py-7 flex items-center justify-between">
+          <div className="flex items-center gap-8">
+            <Logo size={32} withLabel />
+            <nav className="flex items-center gap-6 text-sm">
+              <Link href="/admin" className="text-ohe-ink font-medium">
+                Tableau de bord
+              </Link>
+              <Link href="/admin/leads" className="text-ohe-muted hover:text-ohe-ink transition-colors">
+                Leads
+              </Link>
+              <Link href="/admin/contacts" className="text-ohe-muted hover:text-ohe-ink transition-colors">
+                Demandes de contact
+              </Link>
+            </nav>
+          </div>
           <form action={logoutAdmin}>
             <button type="submit" className="text-sm text-ohe-muted underline underline-offset-4 hover:text-ohe-ink transition-colors">
               Déconnexion
@@ -24,7 +36,7 @@ export default async function AdminHomePage() {
         </div>
       </div>
 
-      <div className="max-w-[1200px] mx-auto px-14 py-12 space-y-12">
+      <div className="max-w-[1400px] mx-auto px-14 py-12 space-y-12">
         <div>
           <div className="ohe-eyebrow text-ohe-accent">✱ Administration</div>
           <h1 className="mt-4 text-[48px] leading-[1.05] tracking-[-0.022em] font-normal text-balance">
@@ -33,7 +45,6 @@ export default async function AdminHomePage() {
           </h1>
         </div>
 
-        {/* Stats */}
         <div className="grid grid-cols-3 gap-6">
           <div className="bg-ohe-panel border border-ohe-line rounded-2xl px-7 py-7">
             <div className="ohe-caption text-ohe-muted">Leads freemium</div>
@@ -52,7 +63,6 @@ export default async function AdminHomePage() {
           </div>
         </div>
 
-        {/* Navigation */}
         <div className="border-t border-ohe-line pt-10 space-y-4">
           <div className="ohe-eyebrow text-ohe-muted mb-6">Sections</div>
           <div className="grid grid-cols-2 gap-4">
