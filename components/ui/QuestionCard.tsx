@@ -34,7 +34,7 @@ export function QuestionCard({ question, prompt, onAnswer }: QuestionCardProps) 
       </p>
 
       {/* Énoncé */}
-      <h2 className="m-0 mt-3.5 text-[28px] sm:text-[36px] lg:text-[44px] leading-[1.25] lg:leading-[1.18] font-normal tracking-[-0.012em] font-serif italic text-balance max-w-[760px]">
+      <h2 className="m-0 mt-3.5 text-[28px] sm:text-[36px] lg:text-[44px] leading-[1.25] lg:leading-[1.18] font-normal tracking-[-0.012em] text-balance max-w-[760px]">
         {parts.map((part, i) => (
           <span key={i}>
             {part}
@@ -83,8 +83,8 @@ export function QuestionCard({ question, prompt, onAnswer }: QuestionCardProps) 
               <span
                 className={
                   isUnknown
-                    ? "text-sm italic"
-                    : "font-serif italic text-lg sm:text-xl"
+                    ? "text-sm text-ohe-muted"
+                    : "text-lg sm:text-xl"
                 }
               >
                 {choice.text}
