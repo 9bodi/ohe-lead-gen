@@ -63,7 +63,7 @@ export default async function ContactsPage({ searchParams }: PageProps) {
       <div className="max-w-[1400px] mx-auto px-14 py-10">
         <div className="flex items-end justify-between mb-6">
           <div>
-            <div className="ohe-eyebrow text-ohe-accent">✱ Administration</div>
+            <div className="ohe-eyebrow text-ohe-accent"> Administration</div>
             <h1 className="mt-3 text-[40px] leading-[1.05] tracking-[-0.022em] font-normal text-balance">
               Demandes de <span className="font-serif italic text-ohe-accent">contact</span>
             </h1>

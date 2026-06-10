@@ -38,7 +38,7 @@ export default async function AdminHomePage() {
 
       <div className="max-w-[1400px] mx-auto px-14 py-12 space-y-12">
         <div>
-          <div className="ohe-eyebrow text-ohe-accent">✱ Administration</div>
+          <div className="ohe-eyebrow text-ohe-accent"> Administration</div>
           <h1 className="mt-4 text-[48px] leading-[1.05] tracking-[-0.022em] font-normal text-balance">
             Tableau de bord{" "}
             <span className="font-serif italic text-ohe-accent">OHé</span>.

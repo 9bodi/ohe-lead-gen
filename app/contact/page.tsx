@@ -97,7 +97,7 @@ function ContactPageContent() {
         <div className="flex-1 flex items-center justify-center px-6 py-12 sm:px-10 lg:px-14 lg:py-16">
           <div className="max-w-[560px] text-center">
             <div className="ohe-eyebrow text-ohe-accent mb-6">
-              ✱ Demande envoyée
+               Demande envoyée
             </div>
             <h1 className="text-[34px] sm:text-[44px] lg:text-[52px] leading-[1.07] lg:leading-[1.05] tracking-[-0.022em] font-normal text-balance">
 
@@ -140,16 +140,17 @@ function ContactPageContent() {
             <div className="flex-1 px-6 py-10 sm:px-10 lg:px-14 lg:py-12">
         <div className="max-w-[680px] mx-auto">
           <div className="text-ohe-accent flex items-center gap-3 text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.18em] sm:tracking-[0.32em]">
-            <span className="opacity-65">✱</span>
+            <span className="opacity-65"></span>
             <span>Diagnostic d&apos;équipe</span>
           </div>
 
-          <h1 className="mt-6 text-[32px] sm:text-[40px] lg:text-[48px] leading-[1.08] lg:leading-[1.05] tracking-[-0.022em] font-normal text-balance">
+                    <h1 className="mt-6 text-[32px] sm:text-[40px] lg:text-[48px] leading-[1.08] lg:leading-[1.05] tracking-[-0.022em] font-normal text-balance">
             Échangeons sur votre{" "}
             <span className="font-serif italic text-ohe-accent">
               projet de diagnostic
-            </span>.
+            </span>
           </h1>
+
 
 
           <p className="mt-5 text-base text-ohe-muted text-pretty max-w-[520px]">
@@ -254,9 +255,10 @@ function ContactPageContent() {
 
             {/* Taille équipe */}
             <div>
-              <FieldLabel htmlFor="teamSize" optional>
-                Équipe à diagnostiquer
+                            <FieldLabel htmlFor="teamSize" optional>
+                Équipe à évaluer
               </FieldLabel>
+
               <select
                 id="teamSize"
                 value={form.teamSize || ""}

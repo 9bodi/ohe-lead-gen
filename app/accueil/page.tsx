@@ -94,7 +94,7 @@ export default function Home() {
             color: "var(--color-ohe-accent-soft)",
           }}
         >
-          ✱
+          
         </div>
       </div>
     </main>

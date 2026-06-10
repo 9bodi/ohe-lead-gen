@@ -59,12 +59,12 @@ function LoadingContent() {
           color: "var(--color-ohe-accent-soft)",
         }}
       >
-        ✱
+        
       </div>
 
       <div className="text-center max-w-md relative z-10">
         <div className="text-ohe-accent mb-8 flex items-center justify-center gap-2 text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.18em] sm:tracking-[0.28em]">
-          <span className="opacity-65">✱</span>
+          <span className="opacity-65"></span>
           <span>Votre résultat est en préparation</span>
         </div>
 

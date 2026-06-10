@@ -48,7 +48,7 @@ export function TestClient() {
     return (
       <main className="min-h-screen grid place-items-center bg-ohe-bg text-ohe-ink px-6">
         <div className="text-center">
-          <div className="ohe-eyebrow text-ohe-accent mb-4">✱ Préparation</div>
+          <div className="ohe-eyebrow text-ohe-accent mb-4"> Préparation</div>
           <p className="text-ohe-muted text-sm">Chargement du diagnostic...</p>
         </div>
       </main>
@@ -60,7 +60,7 @@ export function TestClient() {
     return (
       <main className="min-h-screen grid place-items-center bg-ohe-bg text-ohe-ink px-6">
         <div className="text-center max-w-md">
-          <div className="ohe-eyebrow text-ohe-accent mb-6">✱ Partie 2 sur 2</div>
+          <div className="ohe-eyebrow text-ohe-accent mb-6"> Partie 2 sur 2</div>
           <h2 className="text-[32px] sm:text-[44px] leading-[1.05] tracking-[-0.02em] font-normal text-balance">
             Maintenant,{" "}
             <span className="font-serif italic text-ohe-accent">la conjugaison</span>.
@@ -78,7 +78,7 @@ export function TestClient() {
     return (
       <main className="min-h-screen grid place-items-center bg-ohe-bg text-ohe-ink px-6">
         <div className="text-center">
-          <div className="ohe-eyebrow text-ohe-accent mb-4">✱ Test terminé</div>
+          <div className="ohe-eyebrow text-ohe-accent mb-4"> Test terminé</div>
           <p className="text-ohe-muted text-sm">Préparation de votre résultat...</p>
         </div>
       </main>
@@ -182,7 +182,7 @@ function SidebarInfo({ test }: { test: ReturnType<typeof useTest> }) {
     return (
       <>
         <div className="mt-12">
-          <div className="ohe-eyebrow text-ohe-accent">✱ Progression</div>
+          <div className="ohe-eyebrow text-ohe-accent"> Progression</div>
           <div className="mt-3 flex items-baseline gap-2.5">
             <span
               className="font-serif italic text-ohe-accent"
@@ -219,7 +219,7 @@ function SidebarInfo({ test }: { test: ReturnType<typeof useTest> }) {
     return (
       <>
         <div className="mt-12">
-          <div className="ohe-eyebrow text-ohe-accent">✱ Profil</div>
+          <div className="ohe-eyebrow text-ohe-accent"> Profil</div>
           <div className="mt-3 flex items-baseline gap-2.5">
             <span
               className="font-serif italic text-ohe-accent"
@@ -262,7 +262,7 @@ function CurrentEyebrow({ test }: { test: ReturnType<typeof useTest> }) {
         : "Conjugaison";
     return (
       <div className="ohe-eyebrow text-ohe-accent inline-flex items-center gap-3 mt-2 lg:mt-6 pr-20">
-        <span className="opacity-65">✱</span>
+        <span className="opacity-65"></span>
         <span style={{ letterSpacing: "0.32em", textTransform: "uppercase" }}>
           {label}
         </span>
@@ -272,7 +272,7 @@ function CurrentEyebrow({ test }: { test: ReturnType<typeof useTest> }) {
   if (test.current.kind === "declarative") {
     return (
       <div className="ohe-eyebrow text-ohe-accent inline-flex items-center gap-3 mt-2 lg:mt-6">
-        <span className="opacity-65">✱</span>
+        <span className="opacity-65"></span>
         <span>Votre profil</span>
       </div>
     );

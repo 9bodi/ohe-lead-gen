@@ -41,7 +41,7 @@ export default function AdminLoginPage() {
       <div className="flex-1 flex items-center justify-center px-14 py-12">
         <div className="w-full max-w-[420px]">
           <div className="ohe-eyebrow text-ohe-accent mb-6">
-            ✱ Administration
+             Administration
           </div>
           <h1 className="text-[40px] leading-[1.05] tracking-[-0.022em] font-normal text-balance">
             Connexion{" "}

@@ -130,7 +130,7 @@ export default function CapturePage() {
         <div className="w-full max-w-[560px]">
           {/* Premier titre */}
           <div className="text-ohe-accent flex items-center gap-3 text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.18em] sm:tracking-[0.32em]">
-            <span className="opacity-65">✱</span>
+            <span className="opacity-65"></span>
             <span>Félicitations</span>
           </div>
 

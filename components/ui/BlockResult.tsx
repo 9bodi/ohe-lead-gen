@@ -48,12 +48,12 @@ export function BlockResult(props: BlockResultProps) {
       <div className="grid grid-cols-[32px_1fr] sm:grid-cols-[40px_1fr_auto] items-center gap-3 sm:gap-4 py-4 border-b border-ohe-line-soft">
         <div className="ohe-caption text-ohe-muted opacity-40">{props.num}</div>
         <div className="flex items-center gap-3">
-          <span className="font-serif italic text-[17px] sm:text-[18px] text-ohe-muted opacity-50">
+          <span className="text-[17px] sm:text-[18px] text-ohe-muted opacity-50">
             {props.title}
           </span>
           <LockIcon />
         </div>
-        <div className="hidden sm:block text-[12px] text-ohe-muted italic opacity-60">
+        <div className="hidden sm:block text-[12px] text-ohe-muted opacity-60">
           Disponible avec le diagnostic complet
         </div>
       </div>
@@ -61,20 +61,21 @@ export function BlockResult(props: BlockResultProps) {
   }
 
   const colors = COLOR_CLASSES[props.color];
+  const percent = Math.round((props.correct / props.total) * 100);
 
   return (
     <div className="grid grid-cols-[32px_1fr] sm:grid-cols-[40px_1fr_auto_auto] items-center gap-x-3 gap-y-2 sm:gap-4 py-4 border-b border-ohe-line">
       <div className="ohe-caption text-ohe-accent">{props.num}</div>
       <div className="flex items-center gap-3">
         <span className={`w-2 h-2 rounded-full shrink-0 ${colors.dot}`} />
-        <span className="font-serif italic text-[18px] sm:text-[20px] text-ohe-ink">
+        <span className="text-[18px] sm:text-[20px] text-ohe-ink">
           {props.title}
         </span>
       </div>
       {/* Score + badge : sous le titre sur mobile, en ligne dès sm */}
       <div className="col-start-2 sm:col-start-3 flex items-center gap-3 sm:gap-4 sm:contents">
-        <div className="font-serif italic text-[16px] sm:text-[18px] text-ohe-ink tabular-nums">
-          {props.correct} / {props.total}
+        <div className="text-[16px] sm:text-[18px] text-ohe-ink tabular-nums font-medium">
+          {percent} %
         </div>
         <div
           className={`px-3 py-1 text-[11px] font-medium uppercase tracking-[0.12em] rounded-full border ${colors.badge}`}
@@ -95,20 +96,8 @@ function LockIcon() {
       fill="none"
       className="text-ohe-muted opacity-60 shrink-0"
     >
-      <rect
-        x="2"
-        y="6"
-        width="10"
-        height="7"
-        rx="1"
-        stroke="currentColor"
-        strokeWidth="1.5"
-      />
-      <path
-        d="M4 6V4a3 3 0 1 1 6 0v2"
-        stroke="currentColor"
-        strokeWidth="1.5"
-      />
+      <rect x="2" y="6" width="10" height="7" rx="1" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M4 6V4a3 3 0 1 1 6 0v2" stroke="currentColor" strokeWidth="1.5" />
     </svg>
   );
 }
