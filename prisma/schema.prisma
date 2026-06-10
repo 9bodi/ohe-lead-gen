@@ -55,6 +55,11 @@ model Lead {
   // === Identifiant principal ===
   email               String   // collecté sous intérêt légitime (délivrance du résultat)
 
+  // === Identité facultative (capture freemium) ===
+  firstName           String?  // facultatif
+  lastName            String?  // facultatif
+  organization        String?  // facultatif
+
   // === Consentements RGPD ===
   marketingOptIn      Boolean  @default(false) // case "J'accepte de recevoir les infos OHé"
 
@@ -72,6 +77,7 @@ model Lead {
   @@index([createdAt])
   @@index([utmSource])
 }
+
 
 // ============================================================
 // FreemiumResult — résultat du test (un test = un résultat)

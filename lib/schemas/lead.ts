@@ -19,8 +19,13 @@ export const leadFormSchema = z.object({
       "Merci d'utiliser un email valide (les adresses jetables ne sont pas acceptées)"
     ),
 
+  firstName: z.string().trim().max(80, "Prénom trop long").optional().or(z.literal("")),
+  lastName: z.string().trim().max(80, "Nom trop long").optional().or(z.literal("")),
+  organization: z.string().trim().max(150, "Nom d'organisation trop long").optional().or(z.literal("")),
+
   marketingOptIn: z.boolean(),
 });
+
 
 export type LeadFormInput = z.infer<typeof leadFormSchema>;
 

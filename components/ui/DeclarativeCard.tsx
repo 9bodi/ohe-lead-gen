@@ -22,16 +22,8 @@ export function DeclarativeCard({ question, onAnswer }: DeclarativeCardProps) {
 
   return (
     <div className="flex flex-col">
-      {/* Petite consigne neutre */}
-      <p
-        className="text-[13px] text-ohe-muted m-0"
-        style={{ letterSpacing: "0.04em" }}
-      >
-        Quelques précisions sur votre profil :
-      </p>
-
       {/* Énoncé en grand */}
-      <h2 className="m-0 mt-3.5 text-[28px] sm:text-[36px] lg:text-[44px] leading-[1.25] lg:leading-[1.18] font-normal tracking-[-0.012em] font-serif italic text-balance max-w-[760px]">
+      <h2 className="m-0 text-[28px] sm:text-[36px] lg:text-[44px] leading-[1.25] lg:leading-[1.18] font-normal tracking-[-0.012em] text-balance max-w-[760px]">
         {question.statement}
       </h2>
 
@@ -57,7 +49,7 @@ export function DeclarativeCard({ question, onAnswer }: DeclarativeCardProps) {
                 ${selected && !isSelected ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
               `}
             >
-              <span className="font-serif italic text-[20px] sm:text-[24px] lg:text-[28px] leading-none">
+              <span className="text-[20px] sm:text-[24px] lg:text-[28px] leading-none font-medium">
                 {label}
               </span>
             </button>

@@ -51,16 +51,20 @@ export async function submitLead(
   let resultId: string;
   try {
     const result = await prisma.$transaction(async (tx) => {
-      const lead = await tx.lead.create({
+            const lead = await tx.lead.create({
         data: {
           campaignId: campaign.id,
           email: data.email,
+          firstName: data.firstName || null,
+          lastName: data.lastName || null,
+          organization: data.organization || null,
           marketingOptIn: data.marketingOptIn,
           utmSource: data.testPayload.utm?.source ?? null,
           utmCampaign: data.testPayload.utm?.campaign ?? null,
           utmMedium: data.testPayload.utm?.medium ?? null,
         },
       });
+
 
       const freemiumResult = await tx.freemiumResult.create({
         data: {

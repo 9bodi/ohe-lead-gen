@@ -239,12 +239,13 @@ function SidebarInfo({ test }: { test: ReturnType<typeof useTest> }) {
 
         <div className="mt-10 pt-7 border-t border-ohe-line">
           <div className="ohe-eyebrow text-ohe-muted">Section</div>
-          <div className="mt-2.5 text-[18px] leading-[1.3]">
-            Quelques précisions
+                    <div className="mt-2.5 text-[18px] leading-[1.3]">
+            Votre profil
           </div>
           <div className="mt-2 text-[13px] text-ohe-muted">
-            Pas de chrono · prenez votre temps.
+            Pas de chrono, prenez votre temps.
           </div>
+
         </div>
       </>
     );

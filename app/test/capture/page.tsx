@@ -19,6 +19,9 @@ type TestPayload = {
 
 const INITIAL_FORM: LeadFormInput = {
   email: "",
+  firstName: "",
+  lastName: "",
+  organization: "",
   marketingOptIn: false,
 };
 
@@ -32,7 +35,6 @@ export default function CapturePage() {
   const [testPayload, setTestPayload] = useState<TestPayload | null>(null);
   const [hasCheckedStorage, setHasCheckedStorage] = useState(false);
 
-  // Récupérer le payload du test depuis sessionStorage
   useEffect(() => {
     const raw = sessionStorage.getItem("test:payload");
     if (raw) {
@@ -45,7 +47,6 @@ export default function CapturePage() {
     setHasCheckedStorage(true);
   }, []);
 
-  // Si pas de test fait → redirection accueil
   useEffect(() => {
     if (hasCheckedStorage && !testPayload) {
       toast.error("Veuillez d'abord passer le test.");
@@ -66,7 +67,6 @@ export default function CapturePage() {
   function handleSubmit() {
     if (!testPayload) return;
 
-    // Validation Zod côté client
     const result = leadFormSchema.safeParse(form);
     if (!result.success) {
       const fieldErrors: Partial<Record<keyof LeadFormInput, string>> = {};
@@ -81,7 +81,6 @@ export default function CapturePage() {
       return;
     }
 
-    // Récupérer les UTM depuis l'URL si présents
     const params = new URLSearchParams(window.location.search);
     const utm = {
       source: params.get("utm_source") || null,
@@ -103,7 +102,6 @@ export default function CapturePage() {
         return;
       }
 
-      // Succès : nettoyer sessionStorage et passer à l'écran de chargement
       sessionStorage.removeItem("test:payload");
       router.push(`/test/loading?id=${response.resultId}`);
     });
@@ -130,19 +128,16 @@ export default function CapturePage() {
       {/* Contenu centré */}
       <div className="flex-1 flex items-center justify-center px-6 py-10 sm:px-10 lg:px-14 lg:py-12">
         <div className="w-full max-w-[560px]">
-                              <div className="text-ohe-accent flex items-center gap-3 text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.18em] sm:tracking-[0.32em]">
+          {/* Premier titre */}
+          <div className="text-ohe-accent flex items-center gap-3 text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.18em] sm:tracking-[0.32em]">
             <span className="opacity-65">✱</span>
-            <span>Votre résultat est prêt</span>
+            <span>Félicitations</span>
           </div>
 
-
-
+          {/* Grand titre */}
           <h1 className="mt-6 text-[34px] sm:text-[44px] lg:text-[52px] leading-[1.07] lg:leading-[1.05] tracking-[-0.022em] font-normal text-balance">
-            Où souhaitez-vous{" "}
-            <span className="font-serif italic text-ohe-accent">
-              le recevoir
-            </span>{" "}
-            ?
+            Votre résultat est{" "}
+            <span className="font-serif italic text-ohe-accent">prêt</span>
           </h1>
 
           <p className="mt-5 text-base text-ohe-muted text-pretty max-w-[460px]">
@@ -152,6 +147,49 @@ export default function CapturePage() {
 
           {/* Form */}
           <div className="mt-8 lg:mt-9 bg-ohe-panel-tint border border-ohe-line rounded-2xl px-5 py-6 sm:px-8 sm:py-8 space-y-6">
+            {/* Prénom + Nom (facultatifs) */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <FieldLabel htmlFor="firstName">Prénom (facultatif)</FieldLabel>
+                <FieldInput
+                  id="firstName"
+                  value={form.firstName}
+                  onChange={(e) => updateField("firstName", e.target.value)}
+                  placeholder="Marie"
+                  error={errors.firstName}
+                  disabled={isPending}
+                  autoComplete="given-name"
+                />
+              </div>
+              <div>
+                <FieldLabel htmlFor="lastName">Nom (facultatif)</FieldLabel>
+                <FieldInput
+                  id="lastName"
+                  value={form.lastName}
+                  onChange={(e) => updateField("lastName", e.target.value)}
+                  placeholder="Dubois"
+                  error={errors.lastName}
+                  disabled={isPending}
+                  autoComplete="family-name"
+                />
+              </div>
+            </div>
+
+            {/* Organisation (facultatif) */}
+            <div>
+              <FieldLabel htmlFor="organization">Organisation (facultatif)</FieldLabel>
+              <FieldInput
+                id="organization"
+                value={form.organization}
+                onChange={(e) => updateField("organization", e.target.value)}
+                placeholder="Nom de votre structure"
+                error={errors.organization}
+                disabled={isPending}
+                autoComplete="organization"
+              />
+            </div>
+
+            {/* Email (obligatoire) */}
             <div>
               <FieldLabel htmlFor="email">Email</FieldLabel>
               <FieldInput
@@ -163,14 +201,7 @@ export default function CapturePage() {
                 error={errors.email}
                 disabled={isPending}
                 autoComplete="email"
-                autoFocus
               />
-            </div>
-
-            {/* Mention RGPD */}
-            <div className="text-[12px] text-ohe-muted leading-[1.55] pt-2 border-t border-ohe-line-soft">
-              Votre email est utilisé uniquement pour vous envoyer votre
-              résultat. Aucun démarchage sans votre accord.
             </div>
 
             {/* Opt-in marketing */}
@@ -179,8 +210,8 @@ export default function CapturePage() {
               onChange={(checked) => updateField("marketingOptIn", checked)}
               disabled={isPending}
             >
-              J&apos;accepte de recevoir des informations sur les formations{" "}
-              <span className="text-ohe-ink">OHé</span> (facultatif).
+              J&apos;accepte de recevoir des informations de la part d&apos;
+              <span className="text-ohe-ink">OHé Orthographe</span>.
             </Checkbox>
 
             <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-4 pt-2">

@@ -16,15 +16,21 @@ export default function RulesPage() {
     {
       num: "03",
       title: "Résultat à la fin",
-      body: "Votre niveau et profil seront affichés à la fin du test. Aucun affichage de score pendant les questions.",
+      body: "Votre maîtrise et votre besoin seront affichés à la fin du test. Aucun affichage de score pendant les questions.",
     },
   ];
 
   return (
     <main className="min-h-screen bg-ohe-bg text-ohe-ink flex flex-col">
-      {/* Header */}
-      <div className="px-6 py-6 sm:px-10 lg:px-14">
+      {/* Header : logo + retour */}
+      <div className="px-6 py-6 sm:px-10 lg:px-14 flex items-center justify-between gap-4">
         <Logo size={32} withLabel />
+        <Link
+          href="/accueil"
+          className="text-sm text-ohe-muted underline underline-offset-4 hover:text-ohe-ink transition-colors shrink-0"
+        >
+          ← Retour
+        </Link>
       </div>
 
       {/* Contenu centré */}
@@ -33,8 +39,7 @@ export default function RulesPage() {
           <Eyebrow tone="accent">A V A N T &nbsp; D E &nbsp; C O M M E N C E R</Eyebrow>
 
           <h1 className="mt-6 text-[38px] sm:text-[48px] lg:text-[56px] leading-[1.06] lg:leading-[1.05] tracking-[-0.022em] font-normal text-balance">
-            Trois règles{" "}
-            <span className="font-serif italic text-ohe-accent">à savoir</span>.
+            Trois règles
           </h1>
 
           <div className="mt-8 lg:mt-10 flex flex-col">
@@ -54,7 +59,7 @@ export default function RulesPage() {
                     {rule.num}
                   </div>
                   <div>
-                    <div className="font-serif italic text-[20px] sm:text-[22px] text-ohe-ink">
+                    <div className="text-[20px] sm:text-[22px] font-medium text-ohe-ink">
                       {rule.title}
                     </div>
                     <div className="text-[14px] text-ohe-muted mt-2 text-pretty leading-[1.55]">
@@ -66,19 +71,14 @@ export default function RulesPage() {
             })}
           </div>
 
-          <div className="mt-8 lg:mt-10 flex flex-col-reverse sm:flex-row sm:items-center gap-4 sm:gap-6">
+          {/* CTA seul */}
+          <div className="mt-8 lg:mt-10">
             <Link
               href="/test"
               className="inline-flex items-center justify-center gap-[14px] w-full sm:w-auto px-[26px] py-[16px] rounded-full text-sm font-medium tracking-[0.01em] bg-ohe-accent text-ohe-accent-ink border border-transparent hover:bg-ohe-ink transition-colors"
             >
-              <span>Je comprends, démarrer</span>
+              <span>Je commence</span>
               <span className="text-base">→</span>
-            </Link>
-            <Link
-              href="/"
-              className="text-sm text-ohe-muted underline underline-offset-4 hover:text-ohe-ink transition-colors text-center sm:text-left"
-            >
-              ← Retour
             </Link>
           </div>
         </div>

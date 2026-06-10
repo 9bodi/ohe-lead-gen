@@ -245,14 +245,14 @@ const BLOCK_2_QUESTIONS: ProceduralQuestion[] = [
 // === Questions déclaratives — Axe ADAPTATION (3 questions, 15 sec chacune) ===
 
 const DECLARATIVE_QUESTIONS: DeclarativeQuestion[] = [
-  {
+    {
     id: "d1",
     type: "declarative",
-    statement:
-      "Le français est-il votre première langue ou une langue que vous maîtrisez bien à l'oral ?",
+    statement: "Maîtrisez-vous bien le français à l'oral ?",
     // Oui = adapté
     adaptedAnswer: "yes",
   },
+
   {
     id: "d2",
     type: "declarative",
