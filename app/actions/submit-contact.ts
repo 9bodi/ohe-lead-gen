@@ -2,6 +2,8 @@
 
 import { prisma } from "@/lib/prisma";
 import { contactFormSchema, type ContactFormInput } from "@/lib/schemas/contact";
+import { sendContactNotification } from "@/lib/email/send";
+
 
 export type SubmitContactResult =
   | { ok: true; contactId: string }
@@ -43,6 +45,23 @@ export async function submitContact(
         message: data.message || null,
         freemiumResultId: data.freemiumResultId || null,
       },
+    });
+    // Notification email vers la boîte contact — non bloquant.
+    // Si l'envoi échoue, la demande reste enregistrée en base.
+    sendContactNotification({
+      firstName: data.firstName,
+      lastName: data.lastName,
+      email: data.email,
+      phone: data.phone || null,
+      company: data.company,
+      jobTitle: data.jobTitle || null,
+      teamSize: data.teamSize || null,
+      message: data.message || null,
+      contactId: contact.id,
+      freemiumResultId: data.freemiumResultId || null,
+        }).catch((e: unknown) => {
+
+      console.error("submitContact — notification email failed:", e);
     });
 
 
