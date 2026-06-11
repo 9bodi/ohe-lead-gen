@@ -6,7 +6,7 @@ export default function RulesPage() {
     {
       num: "01",
       title: "Chronométré",
-      body: "Vous avez 10 secondes pour répondre à chaque question d'orthographe. Au-delà, la question passe automatiquement.",
+      body: "Vous avez 10 secondes pour répondre à chaque question. Au-delà, la question passe automatiquement.",
     },
     {
       num: "02",

@@ -55,7 +55,8 @@ export default async function ResultPage({ params }: PageProps) {
     { letter: "A", range: "0–37 %", label: "Élémentaire", besoin: "Besoins de base" },
     { letter: "B1", range: "40–60 %", label: "Indépendant intermédiaire", besoin: "Besoins techniques" },
     { letter: "B2", range: "62–80 %", label: "Indépendant avancé", besoin: "Besoins professionnels" },
-    { letter: "C", range: "82–100 %", label: "Expérimenté / expert", besoin: "Besoins expert" },
+        { letter: "C", range: "82–100 %", label: "Expérimenté / expert", besoin: "Besoins experts" },
+
   ];
 
   const diagComplet = [
@@ -88,10 +89,11 @@ export default async function ResultPage({ params }: PageProps) {
             <span className="opacity-65"></span>
             <span>Bilan du diagnostic</span>
           </div>
-          <h1 className="mt-6 text-[34px] sm:text-[44px] lg:text-[56px] leading-[1.07] lg:leading-[1.05] tracking-[-0.022em] font-normal text-balance">
+                    <h1 className="mt-6 text-[34px] sm:text-[44px] lg:text-[56px] leading-[1.07] lg:leading-[1.05] tracking-[-0.022em] font-normal text-balance">
             Votre bilan{" "}
-            <span className="font-serif italic text-ohe-accent">sur deux compétences</span>
+            <span className="font-serif italic text-ohe-accent">orthographique</span>
           </h1>
+
           <p className="mt-4 text-base text-ohe-muted text-pretty max-w-[620px] leading-[1.55]">
             Ce test est une version abrégée du diagnostic conçu par docteure Joannidès.
             Il vous offre un premier aperçu de votre niveau en accord et en conjugaison.
@@ -218,11 +220,13 @@ export default async function ResultPage({ params }: PageProps) {
             </Link>
           </div>
 
-          <div>
+                    <div>
             <Link href={`/contact?type=btob&from=${result.id}`} className={secondaryCtaClass}>
               <span>Réaliser le diagnostic au sein de mon entreprise</span>
+              <span className="text-base">{"\u2192"}</span>
             </Link>
           </div>
+
 
           <div className="pt-2">
             <a
