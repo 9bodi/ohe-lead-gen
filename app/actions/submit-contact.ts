@@ -33,19 +33,21 @@ export async function submitContact(
 
   // Création en DB
   try {
-    const contact = await prisma.contactRequest.create({
+        const contact = await prisma.contactRequest.create({
       data: {
         firstName: data.firstName,
         lastName: data.lastName,
         email: data.email,
         phone: data.phone || null,
-        company: data.company,
+        company: data.company || null,
         jobTitle: data.jobTitle || null,
         teamSize: data.teamSize || null,
         message: data.message || null,
         freemiumResultId: data.freemiumResultId || null,
+        requestType: data.requestType || null,
       },
     });
+
     // Notification email vers la boîte contact — non bloquant.
     // Si l'envoi échoue, la demande reste enregistrée en base.
     sendContactNotification({
@@ -53,7 +55,7 @@ export async function submitContact(
       lastName: data.lastName,
       email: data.email,
       phone: data.phone || null,
-      company: data.company,
+      company: data.company || null,
       jobTitle: data.jobTitle || null,
       teamSize: data.teamSize || null,
       message: data.message || null,

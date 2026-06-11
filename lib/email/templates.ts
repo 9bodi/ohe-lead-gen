@@ -15,6 +15,11 @@ const LEVEL_LABELS = {
   maitrise: "Maîtrisé",
 } as const;
 
+// Convertit un nombre de bonnes réponses (sur 8) en pourcentage entier.
+function toPercent(correct: number): number {
+  return Math.round((correct / 8) * 100);
+}
+
 interface ResultEmailProps {
   recipientEmail: string;
   score: ScoreResult;
@@ -31,6 +36,9 @@ export function renderResultEmail(props: ResultEmailProps): { html: string; text
 
   const block1Colors = LEVEL_COLORS[score.block1.color];
   const block2Colors = LEVEL_COLORS[score.block2.color];
+
+  const block1Percent = toPercent(score.block1.correct);
+  const block2Percent = toPercent(score.block2.correct);
 
   const html = `<!DOCTYPE html>
 <html lang="fr">
@@ -85,7 +93,7 @@ export function renderResultEmail(props: ResultEmailProps): { html: string; text
                           <span style="font-family: Georgia, serif; font-style:italic; font-size:18px; color:#15171C; vertical-align:middle;">Accords des mots</span>
                         </td>
                         <td align="right" style="white-space:nowrap;">
-                          <span style="font-family: Georgia, serif; font-style:italic; font-size:16px; color:#15171C; margin-right:12px;">${score.block1.correct} / 8</span>
+                          <span style="font-family: Georgia, serif; font-style:italic; font-size:16px; color:#15171C; margin-right:12px;">${block1Percent} %</span>
                           <span style="display:inline-block; padding:4px 10px; background:${block1Colors.bg}; color:${block1Colors.text}; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; border-radius:999px; font-weight:600;">${LEVEL_LABELS[score.block1.level]}</span>
                         </td>
                       </tr>
@@ -103,7 +111,7 @@ export function renderResultEmail(props: ResultEmailProps): { html: string; text
                           <span style="font-family: Georgia, serif; font-style:italic; font-size:18px; color:#15171C; vertical-align:middle;">Conjugaison des verbes</span>
                         </td>
                         <td align="right" style="white-space:nowrap;">
-                          <span style="font-family: Georgia, serif; font-style:italic; font-size:16px; color:#15171C; margin-right:12px;">${score.block2.correct} / 8</span>
+                          <span style="font-family: Georgia, serif; font-style:italic; font-size:16px; color:#15171C; margin-right:12px;">${block2Percent} %</span>
                           <span style="display:inline-block; padding:4px 10px; background:${block2Colors.bg}; color:${block2Colors.text}; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; border-radius:999px; font-weight:600;">${LEVEL_LABELS[score.block2.level]}</span>
                         </td>
                       </tr>
@@ -239,8 +247,8 @@ Bravo — vous venez de faire le premier pas : évaluer votre maîtrise de l'éc
 
 VOS RÉSULTATS SUR 2 COMPÉTENCES
 
-01. Accords des mots : ${score.block1.correct}/8 — ${LEVEL_LABELS[score.block1.level]}
-02. Conjugaison des verbes : ${score.block2.correct}/8 — ${LEVEL_LABELS[score.block2.level]}
+01. Accords des mots : ${block1Percent} % — ${LEVEL_LABELS[score.block1.level]}
+02. Conjugaison des verbes : ${block2Percent} % — ${LEVEL_LABELS[score.block2.level]}
 
 ENCORE À EXPLORER
 

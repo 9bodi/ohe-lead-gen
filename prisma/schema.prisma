@@ -128,25 +128,29 @@ enum AdaptationProfile {
 }
 
 // ============================================================
-// ContactRequest — demande de contact B2B
+// ContactRequest — demande de contact (B2B ou particulier)
 // ============================================================
 // Pour les visiteurs qui veulent un diagnostic complet
-// pour leur équipe / entreprise. Séparé de Lead car ce sont
-// des contacts qualifiés qui n'ont pas forcément passé le test.
+// pour leur équipe / entreprise, ou pour eux-mêmes (particulier).
+// Séparé de Lead car ce sont des contacts qualifiés qui n'ont
+// pas forcément passé le test.
 model ContactRequest {
   id                String   @id @default(cuid())
 
   // === Identité ===
   firstName         String
   lastName          String
-  email             String   // pro
+  email             String   // pro ou perso selon le type
   phone             String?  // facultatif, format libre
-  company           String
+  company           String?  // facultatif (un particulier n'en a pas)
 
   // === Qualification facultative ===
   jobTitle          String?  // rôle / fonction
   teamSize          String?  // ex: "1-10", "11-50", "51-200", "200+"
   message           String?  // texte libre, max 500 chars
+
+  // === Origine de la demande ===
+  requestType       String?  // "btoc" (particulier) ou "btob" (entreprise)
 
   // === Lien optionnel vers le test freemium passé ===
   // Si le visiteur a fait le freemium avant de contacter, on lie

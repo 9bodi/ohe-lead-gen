@@ -32,10 +32,10 @@ export const contactFormSchema = z.object({
     .max(200, "Email trop long")
     .refine(
       (email) => !isDisposableEmail(email),
-      "Merci d'utiliser un email professionnel"
+      "Merci d'utiliser un email valide"
     ),
 
-      phone: z
+  phone: z
     .string()
     .trim()
     .max(30, "Numéro trop long")
@@ -46,11 +46,13 @@ export const contactFormSchema = z.object({
     .optional()
     .or(z.literal("")),
 
+  // Entreprise désormais optionnelle (un particulier n'en a pas)
   company: z
     .string()
     .trim()
-    .min(1, "Le nom de votre structure est requis")
-    .max(150, "Nom de structure trop long"),
+    .max(150, "Nom de structure trop long")
+    .optional()
+    .or(z.literal("")),
 
   jobTitle: z
     .string()
@@ -75,6 +77,12 @@ export const contactFormSchema = z.object({
 
   // ID de la session freemium si le contact vient juste de passer le test
   freemiumResultId: z.string().optional().or(z.literal("")),
+
+  // Origine de la demande : "btoc" (particulier) ou "btob" (entreprise)
+  requestType: z
+    .enum(["btoc", "btob"])
+    .optional()
+    .or(z.literal("")),
 });
 
 export type ContactFormInput = z.infer<typeof contactFormSchema>;

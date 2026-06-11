@@ -66,7 +66,7 @@ interface SendContactNotificationInput {
   lastName: string;
   email: string;
   phone?: string | null;
-  company: string;
+  company?: string | null;
   jobTitle?: string | null;
   teamSize?: string | null;
   message?: string | null;
@@ -121,7 +121,8 @@ export async function sendContactNotification(
     const response = await resend.emails.send({
       from,
       to,
-      subject: `Nouvelle demande de contact — ${input.company}`,
+            subject: `Nouvelle demande de contact — ${input.company || input.firstName + " " + input.lastName}`,
+
       html,
       text,
     });

@@ -26,18 +26,44 @@ const INITIAL_FORM: ContactFormInput = {
   teamSize: "",
   message: "",
   freemiumResultId: "",
+  requestType: "",
 };
-
 
 function ContactPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const fromResultId = searchParams.get("from") || "";
+  const typeParam = searchParams.get("type");
+  const isBtoc = typeParam === "btoc";
+
+  // Textes adaptés selon le type de demande
+  const copy = isBtoc
+    ? {
+        badge: "Contact",
+        eyebrow: "Diagnostic individuel",
+        titlePlain: "Réalisons votre",
+        titleAccent: "diagnostic complet",
+        intro:
+          "Un conseiller OHé prendra contact avec vous pour vous présenter le diagnostic complet sur 6 compétences et définir le format adapté à votre situation.",
+        confirmIntro:
+          "Un conseiller OHé prendra contact avec vous sous 48h ouvrées pour échanger sur votre besoin et vous présenter le diagnostic complet.",
+      }
+    : {
+        badge: "Contact",
+        eyebrow: "Diagnostic d'équipe",
+        titlePlain: "Échangeons sur votre",
+        titleAccent: "projet de diagnostic",
+        intro:
+          "Un conseiller OHé prendra contact avec vous pour comprendre vos besoins, présenter le diagnostic complet sur 6 compétences, et définir ensemble le format adapté à votre équipe.",
+        confirmIntro:
+          "Un conseiller OHé prendra contact avec vous sous 48h ouvrées pour échanger sur votre besoin et vous présenter le diagnostic complet adapté à votre équipe.",
+      };
 
   const [isPending, startTransition] = useTransition();
   const [form, setForm] = useState<ContactFormInput>({
     ...INITIAL_FORM,
     freemiumResultId: fromResultId,
+    requestType: isBtoc ? "btoc" : "btob",
   });
   const [errors, setErrors] = useState<Partial<Record<keyof ContactFormInput, string>>>({});
   const [submitted, setSubmitted] = useState(false);
@@ -53,7 +79,6 @@ function ContactPageContent() {
   }
 
   function handleSubmit() {
-    // Validation locale
     const result = contactFormSchema.safeParse(form);
     if (!result.success) {
       const fieldErrors: Partial<Record<keyof ContactFormInput, string>> = {};
@@ -88,7 +113,7 @@ function ContactPageContent() {
   if (submitted) {
     return (
       <main className="min-h-screen bg-ohe-bg text-ohe-ink flex flex-col">
-                <div className="border-b border-ohe-line">
+        <div className="border-b border-ohe-line">
           <div className="max-w-[920px] mx-auto px-6 py-5 sm:px-10 lg:px-14 lg:py-7">
             <Logo size={32} withLabel />
           </div>
@@ -97,20 +122,17 @@ function ContactPageContent() {
         <div className="flex-1 flex items-center justify-center px-6 py-12 sm:px-10 lg:px-14 lg:py-16">
           <div className="max-w-[560px] text-center">
             <div className="ohe-eyebrow text-ohe-accent mb-6">
-               Demande envoyée
+              Demande envoyée
             </div>
             <h1 className="text-[34px] sm:text-[44px] lg:text-[52px] leading-[1.07] lg:leading-[1.05] tracking-[-0.022em] font-normal text-balance">
-
               Merci !{" "}
               <span className="font-serif italic text-ohe-accent">
                 Nous revenons vers vous
               </span>{" "}
-              très vite.
+              très vite
             </h1>
             <p className="mt-6 text-base text-ohe-muted text-pretty">
-              Un conseiller OHé prendra contact avec vous sous 48h ouvrées pour
-              échanger sur votre besoin et vous présenter le diagnostic complet
-              adapté à votre équipe.
+              {copy.confirmIntro}
             </p>
             <div className="mt-10">
               <Link
@@ -129,41 +151,34 @@ function ContactPageContent() {
   // === Formulaire ===
   return (
     <main className="min-h-screen bg-ohe-bg text-ohe-ink flex flex-col">
-            <div className="border-b border-ohe-line">
+      <div className="border-b border-ohe-line">
         <div className="max-w-[920px] mx-auto px-6 py-5 sm:px-10 lg:px-14 lg:py-7 flex items-baseline justify-between gap-4">
           <Logo size={32} withLabel />
-          <div className="ohe-caption text-ohe-muted">Contact B2B</div>
+          <div className="ohe-caption text-ohe-muted">{copy.badge}</div>
         </div>
       </div>
 
-
-            <div className="flex-1 px-6 py-10 sm:px-10 lg:px-14 lg:py-12">
+      <div className="flex-1 px-6 py-10 sm:px-10 lg:px-14 lg:py-12">
         <div className="max-w-[680px] mx-auto">
           <div className="text-ohe-accent flex items-center gap-3 text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.18em] sm:tracking-[0.32em]">
-            <span className="opacity-65"></span>
-            <span>Diagnostic d&apos;équipe</span>
+            <span>{copy.eyebrow}</span>
           </div>
 
-                    <h1 className="mt-6 text-[32px] sm:text-[40px] lg:text-[48px] leading-[1.08] lg:leading-[1.05] tracking-[-0.022em] font-normal text-balance">
-            Échangeons sur votre{" "}
+          <h1 className="mt-6 text-[32px] sm:text-[40px] lg:text-[48px] leading-[1.08] lg:leading-[1.05] tracking-[-0.022em] font-normal text-balance">
+            {copy.titlePlain}{" "}
             <span className="font-serif italic text-ohe-accent">
-              projet de diagnostic
+              {copy.titleAccent}
             </span>
           </h1>
 
-
-
           <p className="mt-5 text-base text-ohe-muted text-pretty max-w-[520px]">
-            Un conseiller OHé prendra contact avec vous pour comprendre vos
-            besoins, présenter le diagnostic complet sur 6 compétences, et
-            définir ensemble le format adapté à votre équipe.
+            {copy.intro}
           </p>
 
-                    <div className="mt-8 lg:mt-9 bg-ohe-panel-tint border border-ohe-line rounded-2xl px-5 py-6 sm:px-8 sm:py-8 space-y-6">
+          <div className="mt-8 lg:mt-9 bg-ohe-panel-tint border border-ohe-line rounded-2xl px-5 py-6 sm:px-8 sm:py-8 space-y-6">
 
             {/* Prénom + Nom */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
-
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
               <div>
                 <FieldLabel htmlFor="firstName">Prénom</FieldLabel>
                 <FieldInput
@@ -192,13 +207,15 @@ function ContactPageContent() {
 
             {/* Email */}
             <div>
-              <FieldLabel htmlFor="email">Email professionnel</FieldLabel>
+              <FieldLabel htmlFor="email">
+                {isBtoc ? "Email" : "Email professionnel"}
+              </FieldLabel>
               <FieldInput
                 id="email"
                 type="email"
                 value={form.email}
                 onChange={(e) => updateField("email", e.target.value)}
-                placeholder="marie.dubois@entreprise.fr"
+                placeholder={isBtoc ? "marie.dubois@exemple.fr" : "marie.dubois@entreprise.fr"}
                 error={errors.email}
                 disabled={isPending}
                 autoComplete="email"
@@ -223,57 +240,63 @@ function ContactPageContent() {
               />
             </div>
 
-            {/* Entreprise */}
-            <div>
-              <FieldLabel htmlFor="company">Entreprise / Structure</FieldLabel>
-              <FieldInput
-                id="company"
-                value={form.company}
-                onChange={(e) => updateField("company", e.target.value)}
-                placeholder="Nom de votre organisation"
-                error={errors.company}
-                disabled={isPending}
-                autoComplete="organization"
-              />
-            </div>
+            {/* Champs entreprise — uniquement en mode B2B */}
+            {!isBtoc && (
+              <>
+                {/* Entreprise */}
+                <div>
+                  <FieldLabel htmlFor="company" optional>
+                    Entreprise / Structure
+                  </FieldLabel>
+                  <FieldInput
+                    id="company"
+                    value={form.company || ""}
+                    onChange={(e) => updateField("company", e.target.value)}
+                    placeholder="Nom de votre organisation"
+                    error={errors.company}
+                    disabled={isPending}
+                    autoComplete="organization"
+                  />
+                </div>
 
-            {/* Rôle */}
-            <div>
-              <FieldLabel htmlFor="jobTitle" optional>
-                Votre rôle
-              </FieldLabel>
-              <FieldInput
-                id="jobTitle"
-                value={form.jobTitle || ""}
-                onChange={(e) => updateField("jobTitle", e.target.value)}
-                placeholder="Ex. Responsable RH, Directeur Formation"
-                error={errors.jobTitle}
-                disabled={isPending}
-                autoComplete="organization-title"
-              />
-            </div>
+                {/* Rôle */}
+                <div>
+                  <FieldLabel htmlFor="jobTitle" optional>
+                    Votre rôle
+                  </FieldLabel>
+                  <FieldInput
+                    id="jobTitle"
+                    value={form.jobTitle || ""}
+                    onChange={(e) => updateField("jobTitle", e.target.value)}
+                    placeholder="Ex. Responsable RH, Directeur Formation"
+                    error={errors.jobTitle}
+                    disabled={isPending}
+                    autoComplete="organization-title"
+                  />
+                </div>
 
-            {/* Taille équipe */}
-            <div>
-                            <FieldLabel htmlFor="teamSize" optional>
-                Équipe à évaluer
-              </FieldLabel>
-
-              <select
-                id="teamSize"
-                value={form.teamSize || ""}
-                onChange={(e) => updateField("teamSize", e.target.value)}
-                disabled={isPending}
-                className="w-full px-0 py-2 border-b border-ohe-line bg-transparent text-lg text-ohe-ink focus:outline-none focus:border-ohe-accent transition-colors disabled:opacity-50"
-              >
-                <option value="">Sélectionner...</option>
-                {TEAM_SIZE_OPTIONS.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </option>
-                ))}
-              </select>
-            </div>
+                {/* Taille équipe */}
+                <div>
+                  <FieldLabel htmlFor="teamSize" optional>
+                    Équipe à évaluer
+                  </FieldLabel>
+                  <select
+                    id="teamSize"
+                    value={form.teamSize || ""}
+                    onChange={(e) => updateField("teamSize", e.target.value)}
+                    disabled={isPending}
+                    className="w-full px-0 py-2 border-b border-ohe-line bg-transparent text-lg text-ohe-ink focus:outline-none focus:border-ohe-accent transition-colors disabled:opacity-50"
+                  >
+                    <option value="">Sélectionner...</option>
+                    {TEAM_SIZE_OPTIONS.map((opt) => (
+                      <option key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </>
+            )}
 
             {/* Message */}
             <div>
@@ -306,7 +329,7 @@ function ContactPageContent() {
             </div>
 
             {/* Boutons */}
-                        <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-4 pt-2">
+            <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-4 pt-2">
               <Link
                 href="/"
                 className="text-sm text-ohe-muted underline underline-offset-4 hover:text-ohe-ink transition-colors text-center sm:text-left"
