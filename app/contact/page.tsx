@@ -4,14 +4,11 @@ import { useState, useTransition, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { toast } from "sonner";
-import {
-  Logo,
-  FieldLabel,
-  FieldInput,
-} from "@/components/ui";
+import { Logo, FieldLabel, FieldInput } from "@/components/ui";
 import {
   contactFormSchema,
   TEAM_SIZE_OPTIONS,
+  PROFILE_OPTIONS,
   type ContactFormInput,
 } from "@/lib/schemas/contact";
 import { submitContact } from "@/app/actions/submit-contact";
@@ -25,6 +22,7 @@ const INITIAL_FORM: ContactFormInput = {
   jobTitle: "",
   teamSize: "",
   message: "",
+  profile: "",
   freemiumResultId: "",
   requestType: "",
 };
@@ -39,14 +37,18 @@ function ContactPageContent() {
   // Textes adaptés selon le type de demande
   const copy = isBtoc
     ? {
-        badge: "Contact",
-        eyebrow: "Diagnostic individuel",
-        titlePlain: "Réalisons votre",
-        titleAccent: "diagnostic complet",
+        badge: "Liste d'attente",
+        eyebrow: "Diagnostic personnel",
+        titlePlain: "Soyez informé(e) du",
+        titleAccent: "lancement",
         intro:
-          "Un conseiller OHé prendra contact avec vous pour vous présenter le diagnostic complet sur 6 compétences et définir le format adapté à votre situation.",
+          "Notre diagnostic personnel sera disponible à la rentrée. Laissez-nous vos coordonnées pour être parmi les premiers informés de son ouverture.",
+        rgpd:
+          "En vous inscrivant, vous acceptez d'être recontacté(e) par l'équipe OHé pour vous prévenir du lancement. Vos données sont traitées dans le respect du RGPD.",
+        submit: "M'inscrire à la liste",
+        confirmTitle: "Merci, vous êtes inscrit(e) !",
         confirmIntro:
-          "Un conseiller OHé prendra contact avec vous sous 48h ouvrées pour échanger sur votre besoin et vous présenter le diagnostic complet.",
+          "Nous vous préviendrons par email dès l'ouverture du diagnostic personnel à la rentrée.",
       }
     : {
         badge: "Contact",
@@ -55,6 +57,10 @@ function ContactPageContent() {
         titleAccent: "projet de diagnostic",
         intro:
           "Un conseiller OHé prendra contact avec vous pour comprendre vos besoins, présenter le diagnostic complet sur 6 compétences, et définir ensemble le format adapté à votre équipe.",
+        rgpd:
+          "En envoyant ce formulaire, vous acceptez d'être recontacté(e) par l'équipe OHé concernant votre demande. Vos données sont traitées dans le respect du RGPD.",
+        submit: "Envoyer ma demande",
+        confirmTitle: "Merci !",
         confirmIntro:
           "Un conseiller OHé prendra contact avec vous sous 48h ouvrées pour échanger sur votre besoin et vous présenter le diagnostic complet adapté à votre équipe.",
       };
@@ -104,7 +110,7 @@ function ContactPageContent() {
         return;
       }
 
-      toast.success("Demande envoyée. Nous revenons vers vous très vite.");
+      toast.success(isBtoc ? "Vous êtes inscrit(e) !" : "Demande envoyée.");
       setSubmitted(true);
     });
   }
@@ -122,14 +128,10 @@ function ContactPageContent() {
         <div className="flex-1 flex items-center justify-center px-6 py-12 sm:px-10 lg:px-14 lg:py-16">
           <div className="max-w-[560px] text-center">
             <div className="ohe-eyebrow text-ohe-accent mb-6">
-              Demande envoyée
+              {isBtoc ? "Inscription confirmée" : "Demande envoyée"}
             </div>
             <h1 className="text-[34px] sm:text-[44px] lg:text-[52px] leading-[1.07] lg:leading-[1.05] tracking-[-0.022em] font-normal text-balance">
-              Merci !{" "}
-              <span className="font-serif italic text-ohe-accent">
-                Nous revenons vers vous
-              </span>{" "}
-              très vite
+              {copy.confirmTitle}
             </h1>
             <p className="mt-6 text-base text-ohe-muted text-pretty">
               {copy.confirmIntro}
@@ -222,9 +224,9 @@ function ContactPageContent() {
               />
             </div>
 
-            {/* Téléphone (facultatif) */}
+            {/* Téléphone : obligatoire en B2B, facultatif en B2C */}
             <div>
-              <FieldLabel htmlFor="phone" optional>
+              <FieldLabel htmlFor="phone" optional={isBtoc}>
                 Téléphone
               </FieldLabel>
               <FieldInput
@@ -240,14 +242,35 @@ function ContactPageContent() {
               />
             </div>
 
-            {/* Champs entreprise — uniquement en mode B2B */}
+            {/* Champs B2C : Profil obligatoire */}
+            {isBtoc && (
+              <div>
+                <FieldLabel htmlFor="profile">Votre profil</FieldLabel>
+                <select
+                  id="profile"
+                  value={form.profile || ""}
+                  onChange={(e) => updateField("profile", e.target.value as ContactFormInput["profile"])}
+                  disabled={isPending}
+                  className="w-full px-0 py-2 border-b border-ohe-line bg-transparent text-lg text-ohe-ink focus:outline-none focus:border-ohe-accent transition-colors disabled:opacity-50"
+                >
+                  <option value="">Sélectionner...</option>
+                  {PROFILE_OPTIONS.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </select>
+                {errors.profile && (
+                  <div className="mt-1.5 text-xs text-red-600">{errors.profile}</div>
+                )}
+              </div>
+            )}
+
+            {/* Champs B2B : entreprise + rôle + taille équipe */}
             {!isBtoc && (
               <>
-                {/* Entreprise */}
                 <div>
-                  <FieldLabel htmlFor="company" optional>
-                    Entreprise / Structure
-                  </FieldLabel>
+                  <FieldLabel htmlFor="company">Entreprise / Structure</FieldLabel>
                   <FieldInput
                     id="company"
                     value={form.company || ""}
@@ -259,7 +282,6 @@ function ContactPageContent() {
                   />
                 </div>
 
-                {/* Rôle */}
                 <div>
                   <FieldLabel htmlFor="jobTitle" optional>
                     Votre rôle
@@ -275,7 +297,6 @@ function ContactPageContent() {
                   />
                 </div>
 
-                {/* Taille équipe */}
                 <div>
                   <FieldLabel htmlFor="teamSize" optional>
                     Équipe à évaluer
@@ -295,37 +316,35 @@ function ContactPageContent() {
                     ))}
                   </select>
                 </div>
+
+                {/* Message libre — uniquement en B2B */}
+                <div>
+                  <FieldLabel htmlFor="message" optional>
+                    Votre message
+                  </FieldLabel>
+                  <textarea
+                    id="message"
+                    value={form.message || ""}
+                    onChange={(e) => updateField("message", e.target.value)}
+                    disabled={isPending}
+                    rows={4}
+                    maxLength={500}
+                    placeholder="Précisez votre besoin, vos contraintes, votre échéance..."
+                    className="w-full px-3 py-2 border border-ohe-line rounded-lg bg-ohe-panel text-base text-ohe-ink focus:outline-none focus:border-ohe-accent transition-colors disabled:opacity-50 resize-none"
+                  />
+                  {errors.message && (
+                    <div className="mt-1.5 text-xs text-red-600">{errors.message}</div>
+                  )}
+                  <div className="mt-1 text-[11px] text-ohe-muted text-right">
+                    {(form.message || "").length} / 500
+                  </div>
+                </div>
               </>
             )}
 
-            {/* Message */}
-            <div>
-              <FieldLabel htmlFor="message" optional>
-                Votre message
-              </FieldLabel>
-              <textarea
-                id="message"
-                value={form.message || ""}
-                onChange={(e) => updateField("message", e.target.value)}
-                disabled={isPending}
-                rows={4}
-                maxLength={500}
-                placeholder="Précisez votre besoin, vos contraintes, votre échéance..."
-                className="w-full px-3 py-2 border border-ohe-line rounded-lg bg-ohe-panel text-base text-ohe-ink focus:outline-none focus:border-ohe-accent transition-colors disabled:opacity-50 resize-none"
-              />
-              {errors.message && (
-                <div className="mt-1.5 text-xs text-red-600">{errors.message}</div>
-              )}
-              <div className="mt-1 text-[11px] text-ohe-muted text-right">
-                {(form.message || "").length} / 500
-              </div>
-            </div>
-
             {/* Mention RGPD */}
             <div className="text-[12px] text-ohe-muted leading-[1.55] pt-2 border-t border-ohe-line-soft">
-              En envoyant ce formulaire, vous acceptez d&apos;être recontacté(e)
-              par l&apos;équipe OHé concernant votre demande. Vos données sont
-              traitées dans le respect du RGPD.
+              {copy.rgpd}
             </div>
 
             {/* Boutons */}
@@ -342,7 +361,7 @@ function ContactPageContent() {
                 disabled={isPending}
                 className="inline-flex items-center justify-center gap-3 w-full sm:w-auto px-6 py-3.5 rounded-full text-sm font-medium tracking-[0.01em] bg-ohe-accent text-ohe-accent-ink border border-transparent hover:bg-ohe-ink transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                {isPending ? "Envoi..." : "Envoyer ma demande"}
+                {isPending ? "Envoi..." : copy.submit}
                 <span>→</span>
               </button>
             </div>

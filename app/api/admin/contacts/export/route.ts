@@ -2,6 +2,19 @@ import { NextRequest, NextResponse } from "next/server";
 import { isAuthenticated } from "@/lib/auth/session";
 import { getAllContactsForExport, type ContactsQueryOptions } from "@/lib/admin/contacts-query";
 
+const PROFILE_LABELS: Record<string, string> = {
+  salarie: "Salarié(e)",
+  etudiant: "Étudiant(e)",
+  demandeur_emploi: "Demandeur d'emploi",
+  independant: "Indépendant(e)",
+  autre: "Autre",
+};
+
+const REQUEST_TYPE_LABELS: Record<string, string> = {
+  btoc: "Diagnostic personnel",
+  btob: "Diagnostic équipe",
+};
+
 function csvEscape(value: string | null | undefined): string {
   if (value === null || value === undefined) return "";
   const str = String(value);
@@ -23,6 +36,7 @@ export async function GET(req: NextRequest) {
     period: (sp.get("period") as ContactsQueryOptions["period"]) ?? undefined,
     withFreemium: (sp.get("withFreemium") as ContactsQueryOptions["withFreemium"]) ?? undefined,
     teamSize: sp.get("teamSize") ?? undefined,
+    profile: sp.get("profile") ?? undefined,
   };
 
   const contacts = await getAllContactsForExport(options);
@@ -30,10 +44,12 @@ export async function GET(req: NextRequest) {
   const headers = [
     "Date",
     "Heure",
+    "Type de demande",
     "Prénom",
     "Nom",
     "Email",
     "Téléphone",
+    "Profil B2C",
     "Entreprise",
     "Rôle",
     "Taille équipe",
@@ -42,19 +58,20 @@ export async function GET(req: NextRequest) {
     "ID résultat freemium",
   ];
 
-
   const rows = contacts.map((c) => {
     const date = new Date(c.createdAt);
     const dateStr = date.toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit", year: "numeric" });
     const timeStr = date.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
 
-        return [
+    return [
       csvEscape(dateStr),
       csvEscape(timeStr),
+      csvEscape(c.requestType ? REQUEST_TYPE_LABELS[c.requestType] ?? c.requestType : ""),
       csvEscape(c.firstName),
       csvEscape(c.lastName),
       csvEscape(c.email),
       csvEscape(c.phone),
+      csvEscape(c.profile ? PROFILE_LABELS[c.profile] ?? c.profile : ""),
       csvEscape(c.company),
       csvEscape(c.jobTitle),
       csvEscape(c.teamSize),
@@ -62,7 +79,6 @@ export async function GET(req: NextRequest) {
       csvEscape(c.freemiumResultId ? "Oui" : "Non"),
       csvEscape(c.freemiumResultId),
     ].join(";");
-
   });
 
   const csv = [headers.map(csvEscape).join(";"), ...rows].join("\n");

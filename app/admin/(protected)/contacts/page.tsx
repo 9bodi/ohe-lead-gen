@@ -3,6 +3,22 @@ import { Logo, ContactFilters } from "@/components/ui";
 import { logoutAdmin } from "@/app/actions/admin-auth";
 import { getContacts, type ContactsQueryOptions } from "@/lib/admin/contacts-query";
 
+const PROFILE_LABELS: Record<string, string> = {
+  salarie: "Salarié(e)",
+  etudiant: "Étudiant(e)",
+  demandeur_emploi: "Demandeur d'emploi",
+  independant: "Indépendant(e)",
+  autre: "Autre",
+};
+
+const PROFILE_BADGE_CLASSES: Record<string, string> = {
+  salarie: "bg-violet-50 text-violet-700 border-violet-200",
+  etudiant: "bg-sky-50 text-sky-700 border-sky-200",
+  demandeur_emploi: "bg-orange-50 text-orange-700 border-orange-200",
+  independant: "bg-emerald-50 text-emerald-700 border-emerald-200",
+  autre: "bg-gray-50 text-gray-600 border-gray-200",
+};
+
 interface PageProps {
   searchParams: Promise<{
     page?: string;
@@ -10,6 +26,7 @@ interface PageProps {
     period?: string;
     withFreemium?: string;
     teamSize?: string;
+    profile?: string;
   }>;
 }
 
@@ -24,6 +41,7 @@ export default async function ContactsPage({ searchParams }: PageProps) {
     period: sp.period as ContactsQueryOptions["period"],
     withFreemium: sp.withFreemium as ContactsQueryOptions["withFreemium"],
     teamSize: sp.teamSize,
+    profile: sp.profile,
   };
 
   const { contacts, total, totalPages } = await getContacts(options);
@@ -33,6 +51,7 @@ export default async function ContactsPage({ searchParams }: PageProps) {
   if (sp.period) currentParams.set("period", sp.period);
   if (sp.withFreemium) currentParams.set("withFreemium", sp.withFreemium);
   if (sp.teamSize) currentParams.set("teamSize", sp.teamSize);
+  if (sp.profile) currentParams.set("profile", sp.profile);
 
   return (
     <main className="min-h-screen bg-ohe-bg text-ohe-ink">
@@ -83,89 +102,116 @@ export default async function ContactsPage({ searchParams }: PageProps) {
           </div>
         ) : (
           <div className="space-y-4">
-            {contacts.map((contact) => (
-              <div key={contact.id} className="bg-ohe-panel border border-ohe-line rounded-2xl px-6 py-5">
-                <div className="flex items-start justify-between gap-6">
-                  <div className="flex-1 min-w-0">
-                    {/* Ligne 1 : nom + entreprise + date */}
-                    <div className="flex items-baseline gap-3 flex-wrap">
-                      <div className="font-serif italic text-[22px] text-ohe-ink">
-                        {contact.firstName} {contact.lastName}
+            {contacts.map((contact) => {
+              const isBtoc = contact.requestType === "btoc";
+              return (
+                <div key={contact.id} className="bg-ohe-panel border border-ohe-line rounded-2xl px-6 py-5">
+                  <div className="flex items-start justify-between gap-6">
+                    <div className="flex-1 min-w-0">
+                      {/* Badge type de demande en tête */}
+                      <div className="mb-3">
+                        {isBtoc ? (
+                          <span className="inline-flex items-center px-2.5 py-1 text-[11px] font-medium uppercase tracking-[0.1em] rounded-full bg-ohe-line-soft text-ohe-ink border border-ohe-line">
+                            Diagnostic personnel
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center px-2.5 py-1 text-[11px] font-medium uppercase tracking-[0.1em] rounded-full bg-ohe-accent text-ohe-accent-ink">
+                            Diagnostic équipe
+                          </span>
+                        )}
                       </div>
-                      <div className="text-sm text-ohe-muted">·</div>
-                      <div className="text-sm font-medium text-ohe-ink">
-                        {contact.company}
+
+                      {/* Ligne 1 : nom + entreprise + rôle */}
+                      <div className="flex items-baseline gap-3 flex-wrap">
+                        <div className="font-serif italic text-[22px] text-ohe-ink">
+                          {contact.firstName} {contact.lastName}
+                        </div>
+                        {contact.company && (
+                          <>
+                            <div className="text-sm text-ohe-muted">·</div>
+                            <div className="text-sm font-medium text-ohe-ink">
+                              {contact.company}
+                            </div>
+                          </>
+                        )}
+                        {contact.jobTitle && (
+                          <>
+                            <div className="text-sm text-ohe-muted">·</div>
+                            <div className="text-[13px] text-ohe-muted italic">
+                              {contact.jobTitle}
+                            </div>
+                          </>
+                        )}
                       </div>
-                      {contact.jobTitle && (
-                        <>
-                          <div className="text-sm text-ohe-muted">·</div>
-                          <div className="text-[13px] text-ohe-muted italic">
-                            {contact.jobTitle}
-                          </div>
-                        </>
+
+                      {/* Ligne 2 : email + téléphone + date */}
+                      <div className="mt-2 flex items-center gap-4 text-[13px] text-ohe-muted flex-wrap">
+                        <a href={`mailto:${contact.email}`} className="text-ohe-accent underline underline-offset-4 hover:no-underline">
+                          {contact.email}
+                        </a>
+                        {contact.phone && (
+                          <>
+                            <span>·</span>
+                            <a href={`tel:${contact.phone.replace(/\s/g, "")}`} className="text-ohe-accent underline underline-offset-4 hover:no-underline">
+                              {contact.phone}
+                            </a>
+                          </>
+                        )}
+                        <span>·</span>
+                        <span>
+                          Reçue le {new Date(contact.createdAt).toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric" })}
+                          {" à "}
+                          {new Date(contact.createdAt).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}
+                        </span>
+                      </div>
+
+                      {/* Ligne 3 : badges contextuels */}
+                      <div className="mt-3 flex items-center gap-2 flex-wrap">
+                        {/* Badge profil B2C */}
+                        {contact.profile && (
+                          <span className={`inline-flex items-center px-2.5 py-1 text-[11px] font-medium uppercase tracking-[0.1em] rounded-full border ${PROFILE_BADGE_CLASSES[contact.profile] ?? PROFILE_BADGE_CLASSES.autre}`}>
+                            {PROFILE_LABELS[contact.profile] ?? contact.profile}
+                          </span>
+                        )}
+                        {/* Badge taille équipe B2B */}
+                        {contact.teamSize && (
+                          <span className="inline-flex items-center px-2.5 py-1 text-[11px] font-medium uppercase tracking-[0.1em] rounded-full bg-ohe-accent-soft text-ohe-accent">
+                            Équipe : {contact.teamSize}
+                          </span>
+                        )}
+                        {/* Badge freemium */}
+                        {contact.freemiumResultId ? (
+                          <Link href={`/result/${contact.freemiumResultId}`} target="_blank" className="inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-medium rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 transition-colors">
+                            A fait le test freemium →
+                          </Link>
+                        ) : (
+                          <span className="inline-flex items-center px-2.5 py-1 text-[11px] font-medium rounded-full bg-ohe-line-soft text-ohe-muted">
+                            Contact direct
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Message (si présent) */}
+                      {contact.message && (
+                        <div className="mt-4 pt-4 border-t border-ohe-line-soft">
+                          <div className="ohe-caption text-ohe-muted mb-2">Message</div>
+                          <p className="text-[14px] text-ohe-ink leading-[1.55] whitespace-pre-wrap">
+                            {contact.message}
+                          </p>
+                        </div>
                       )}
                     </div>
 
-                                       {/* Ligne 2 : email + date */}
-                    <div className="mt-2 flex items-center gap-4 text-[13px] text-ohe-muted">
-                      <a href={`mailto:${contact.email}`} className="text-ohe-accent underline underline-offset-4 hover:no-underline">
-                        {contact.email}
+                    <div className="flex-shrink-0">
+                      <a href={`mailto:${contact.email}?subject=${encodeURIComponent(isBtoc ? "Re : Diagnostic personnel OHé" : "Re : Diagnostic d'équipe OHé")}`} className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-[13px] font-medium bg-ohe-accent text-ohe-accent-ink hover:bg-ohe-ink transition-colors whitespace-nowrap">
+                        Répondre
+                        <span>→</span>
                       </a>
-                      {contact.phone && (
-                        <>
-                          <span>·</span>
-                          <a href={`tel:${contact.phone.replace(/\s/g, "")}`} className="text-ohe-accent underline underline-offset-4 hover:no-underline">
-                            {contact.phone}
-                          </a>
-                        </>
-                      )}
-                      <span>·</span>
-                      <span>
-                        Reçue le {new Date(contact.createdAt).toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric" })}
-                        {" à "}
-                        {new Date(contact.createdAt).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}
-                      </span>
                     </div>
-
-
-                    {/* Ligne 3 : badges (taille équipe + freemium) */}
-                    <div className="mt-3 flex items-center gap-2 flex-wrap">
-                      {contact.teamSize && (
-                        <span className="inline-flex items-center px-2.5 py-1 text-[11px] font-medium uppercase tracking-[0.1em] rounded-full bg-ohe-accent-soft text-ohe-accent">
-                          Équipe : {contact.teamSize}
-                        </span>
-                      )}
-                      {contact.freemiumResultId ? (
-                        <Link href={`/result/${contact.freemiumResultId}`} target="_blank" className="inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-medium rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 transition-colors">
-                          A fait le test freemium →
-                        </Link>
-                      ) : (
-                        <span className="inline-flex items-center px-2.5 py-1 text-[11px] font-medium rounded-full bg-ohe-line-soft text-ohe-muted">
-                          Contact direct
-                        </span>
-                      )}
-                    </div>
-
-                    {/* Message (si présent) */}
-                    {contact.message && (
-                      <div className="mt-4 pt-4 border-t border-ohe-line-soft">
-                        <div className="ohe-caption text-ohe-muted mb-2">Message</div>
-                        <p className="text-[14px] text-ohe-ink leading-[1.55] whitespace-pre-wrap">
-                          {contact.message}
-                        </p>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="flex-shrink-0">
-                    <a href={`mailto:${contact.email}?subject=Re%20%3A%20Diagnostic%20d%27%C3%A9quipe%20OH%C3%A9`} className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-[13px] font-medium bg-ohe-accent text-ohe-accent-ink hover:bg-ohe-ink transition-colors whitespace-nowrap">
-                      Répondre
-                      <span>→</span>
-                    </a>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
 

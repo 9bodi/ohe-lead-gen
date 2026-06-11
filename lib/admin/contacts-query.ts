@@ -1,4 +1,4 @@
-// Requêtes Prisma pour les demandes de contact B2B
+// Requêtes Prisma pour les demandes de contact (B2C waitlist + B2B équipe)
 import { prisma } from "@/lib/prisma";
 import type { Prisma } from "@prisma/client";
 
@@ -8,14 +8,15 @@ export type ContactWithResult = {
   lastName: string;
   email: string;
   phone: string | null;
-  company: string;
+  company: string | null;
   jobTitle: string | null;
   teamSize: string | null;
   message: string | null;
+  profile: string | null;
+  requestType: string | null;
   freemiumResultId: string | null;
   createdAt: Date;
 };
-
 
 export interface ContactsQueryOptions {
   page?: number;
@@ -24,6 +25,7 @@ export interface ContactsQueryOptions {
   period?: "today" | "7d" | "30d" | "all";
   withFreemium?: "yes" | "no" | "all";
   teamSize?: string;
+  profile?: string; // valeur enum profile, ou "all"
 }
 
 export interface ContactsQueryResult {
@@ -68,6 +70,10 @@ function buildWhereClause(options: ContactsQueryOptions): Prisma.ContactRequestW
 
   if (options.teamSize && options.teamSize !== "all") {
     where.teamSize = options.teamSize;
+  }
+
+  if (options.profile && options.profile !== "all") {
+    where.profile = options.profile;
   }
 
   return where;

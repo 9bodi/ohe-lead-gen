@@ -10,79 +10,123 @@ export const TEAM_SIZE_OPTIONS = [
   { value: "500+", label: "Plus de 500 personnes" },
 ] as const;
 
-export const contactFormSchema = z.object({
-  firstName: z
-    .string()
-    .trim()
-    .min(1, "Votre prénom est requis")
-    .max(80, "Prénom trop long"),
+// Profils B2C (waitlist diagnostic personnel)
+export const PROFILE_OPTIONS = [
+  { value: "salarie", label: "Salarié(e)" },
+  { value: "etudiant", label: "Étudiant(e)" },
+  { value: "demandeur_emploi", label: "Demandeur d'emploi" },
+  { value: "independant", label: "Indépendant(e)" },
+  { value: "autre", label: "Autre" },
+] as const;
 
-  lastName: z
-    .string()
-    .trim()
-    .min(1, "Votre nom est requis")
-    .max(80, "Nom trop long"),
+export const contactFormSchema = z
+  .object({
+    firstName: z
+      .string()
+      .trim()
+      .min(1, "Votre prénom est requis")
+      .max(80, "Prénom trop long"),
 
-  email: z
-    .string()
-    .trim()
-    .toLowerCase()
-    .min(1, "Votre email est requis")
-    .email("Format email invalide")
-    .max(200, "Email trop long")
-    .refine(
-      (email) => !isDisposableEmail(email),
-      "Merci d'utiliser un email valide"
-    ),
+    lastName: z
+      .string()
+      .trim()
+      .min(1, "Votre nom est requis")
+      .max(80, "Nom trop long"),
 
-  phone: z
-    .string()
-    .trim()
-    .max(30, "Numéro trop long")
-    .refine(
-      (val) => val === "" || /\d{6,}/.test(val.replace(/\D/g, "")),
-      "Numéro de téléphone invalide"
-    )
-    .optional()
-    .or(z.literal("")),
+    email: z
+      .string()
+      .trim()
+      .toLowerCase()
+      .min(1, "Votre email est requis")
+      .email("Format email invalide")
+      .max(200, "Email trop long")
+      .refine(
+        (email) => !isDisposableEmail(email),
+        "Merci d'utiliser un email valide"
+      ),
 
-  // Entreprise désormais optionnelle (un particulier n'en a pas)
-  company: z
-    .string()
-    .trim()
-    .max(150, "Nom de structure trop long")
-    .optional()
-    .or(z.literal("")),
+    phone: z
+      .string()
+      .trim()
+      .max(30, "Numéro trop long")
+      .refine(
+        (val) => val === "" || /\d{6,}/.test(val.replace(/\D/g, "")),
+        "Numéro de téléphone invalide"
+      )
+      .optional()
+      .or(z.literal("")),
 
-  jobTitle: z
-    .string()
-    .trim()
-    .max(120, "Intitulé trop long")
-    .optional()
-    .or(z.literal("")),
+    company: z
+      .string()
+      .trim()
+      .max(150, "Nom de structure trop long")
+      .optional()
+      .or(z.literal("")),
 
-  teamSize: z
-    .string()
-    .trim()
-    .max(20)
-    .optional()
-    .or(z.literal("")),
+    jobTitle: z
+      .string()
+      .trim()
+      .max(120, "Intitulé trop long")
+      .optional()
+      .or(z.literal("")),
 
-  message: z
-    .string()
-    .trim()
-    .max(500, "Message trop long (500 caractères maximum)")
-    .optional()
-    .or(z.literal("")),
+    teamSize: z
+      .string()
+      .trim()
+      .max(20)
+      .optional()
+      .or(z.literal("")),
 
-  // ID de la session freemium si le contact vient juste de passer le test
-  freemiumResultId: z.string().optional().or(z.literal("")),
+    message: z
+      .string()
+      .trim()
+      .max(500, "Message trop long (500 caractères maximum)")
+      .optional()
+      .or(z.literal("")),
 
-  // Origine de la demande : "btoc" (particulier) ou "btob" (entreprise)
-  requestType: z
-    .enum(["btoc", "btob"])
-    .optional()
-    .or(z.literal("")),
-});
+    // Profil B2C
+    profile: z
+      .enum(["salarie", "etudiant", "demandeur_emploi", "independant", "autre"])
+      .optional()
+      .or(z.literal("")),
+
+    // ID de la session freemium si le contact vient juste de passer le test
+    freemiumResultId: z.string().optional().or(z.literal("")),
+
+    // Origine de la demande
+    requestType: z
+      .enum(["btoc", "btob"])
+      .optional()
+      .or(z.literal("")),
+  })
+  .superRefine((data, ctx) => {
+    // En B2B : phone + company obligatoires
+    if (data.requestType === "btob") {
+      if (!data.phone || data.phone.trim() === "") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["phone"],
+          message: "Le téléphone est requis pour une demande entreprise",
+        });
+      }
+      if (!data.company || data.company.trim() === "") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["company"],
+          message: "Le nom de votre structure est requis",
+        });
+      }
+    }
+    // En B2C : profil obligatoire
+    if (data.requestType === "btoc") {
+      if (!data.profile) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["profile"],
+          message: "Merci de sélectionner votre profil",
+        });
+      }
+    }
+  });
 
 export type ContactFormInput = z.infer<typeof contactFormSchema>;

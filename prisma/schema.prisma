@@ -151,7 +151,9 @@ model ContactRequest {
 
   // === Origine de la demande ===
   requestType       String?  // "btoc" (particulier) ou "btob" (entreprise)
-
+  // === Profil B2C (si requestType = "btoc") ===
+  profile           String?  // "salarie", "etudiant", "demandeur_emploi", "independant", "autre"
+  
   // === Lien optionnel vers le test freemium passé ===
   // Si le visiteur a fait le freemium avant de contacter, on lie
   // les deux pour avoir le contexte complet côté backoffice

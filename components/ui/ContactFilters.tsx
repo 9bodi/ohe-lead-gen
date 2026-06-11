@@ -11,6 +11,14 @@ const TEAM_SIZE_LABELS: Record<string, string> = {
   "500+": "500+",
 };
 
+const PROFILE_LABELS: Record<string, string> = {
+  salarie: "Salarié(e)",
+  etudiant: "Étudiant(e)",
+  demandeur_emploi: "Demandeur d'emploi",
+  independant: "Indépendant(e)",
+  autre: "Autre",
+};
+
 export function ContactFilters() {
   const router = useRouter();
   const pathname = usePathname();
@@ -57,6 +65,7 @@ export function ContactFilters() {
   const currentPeriod = searchParams.get("period") ?? "all";
   const currentWithFreemium = searchParams.get("withFreemium") ?? "all";
   const currentTeamSize = searchParams.get("teamSize") ?? "all";
+  const currentProfile = searchParams.get("profile") ?? "all";
   const hasActiveFilters = searchParams.toString().length > 0;
 
   return (
@@ -77,6 +86,13 @@ export function ContactFilters() {
           <option value="today">Aujourd&apos;hui</option>
           <option value="7d">7 derniers jours</option>
           <option value="30d">30 derniers jours</option>
+        </select>
+
+        <select value={currentProfile} onChange={(e) => setFilter("profile", e.target.value)} disabled={isPending} className="px-4 py-2 text-sm border border-ohe-line rounded-full bg-ohe-bg text-ohe-ink focus:outline-none focus:border-ohe-accent transition-colors cursor-pointer">
+          <option value="all">Tous profils B2C</option>
+          {Object.entries(PROFILE_LABELS).map(([value, label]) => (
+            <option key={value} value={value}>{label}</option>
+          ))}
         </select>
 
         <select value={currentTeamSize} onChange={(e) => setFilter("teamSize", e.target.value)} disabled={isPending} className="px-4 py-2 text-sm border border-ohe-line rounded-full bg-ohe-bg text-ohe-ink focus:outline-none focus:border-ohe-accent transition-colors cursor-pointer">
