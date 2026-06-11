@@ -280,6 +280,7 @@ export const BLOCK_2_COUNT = BLOCK_2.length; // 8
 export const PROCEDURAL_COUNT = BLOCK_1_COUNT + BLOCK_2_COUNT; // 16
 export const DECLARATIVE_COUNT = DECLARATIVES.length; // 3
 export const TOTAL_COUNT = PROCEDURAL_COUNT + DECLARATIVE_COUNT; // 19
+export const DISPLAY_TOTAL_COUNT = TOTAL_COUNT + 1; // 20
 
 // Durées par question (en secondes)
 export const PROCEDURAL_SECONDS_PER_QUESTION = 10;
@@ -295,4 +296,11 @@ export function shuffleBlock<T>(questions: T[]): T[] {
     [arr[i], arr[j]] = [arr[j], arr[i]];
   }
   return arr;
+}
+// === Helper : mélanger les 16 questions des 2 blocs combinés ===
+// Toutes les questions sont fusionnées en une seule séquence aléatoire.
+// Le champ `block` (1 ou 2) reste sur chaque question pour permettre
+// le scoring par bloc à la fin du test, malgré le mélange.
+export function shuffleAllProcedural(): ProceduralQuestion[] {
+  return shuffleBlock([...BLOCK_1, ...BLOCK_2]);
 }

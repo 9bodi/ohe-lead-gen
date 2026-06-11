@@ -21,16 +21,6 @@ export function TestClient() {
   const router = useRouter();
   const test = useTest();
 
-  // Transition entre Bloc 1 et Bloc 2 — 2 sec auto
-  useEffect(() => {
-    if (test.phase === "transition") {
-      const t = setTimeout(() => {
-        test.finishTransition();
-      }, 2000);
-      return () => clearTimeout(t);
-    }
-  }, [test.phase, test]);
-
   // Test terminé → capture email
   useEffect(() => {
     if (test.phase === "completed") {
@@ -50,24 +40,6 @@ export function TestClient() {
         <div className="text-center">
           <div className="ohe-eyebrow text-ohe-accent mb-4"> Préparation</div>
           <p className="text-ohe-muted text-sm">Chargement du diagnostic...</p>
-        </div>
-      </main>
-    );
-  }
-
-  // === Transition entre Bloc 1 et Bloc 2 ===
-  if (test.phase === "transition") {
-    return (
-      <main className="min-h-screen grid place-items-center bg-ohe-bg text-ohe-ink px-6">
-        <div className="text-center max-w-md">
-          <div className="ohe-eyebrow text-ohe-accent mb-6"> Partie 2 sur 2</div>
-          <h2 className="text-[32px] sm:text-[44px] leading-[1.05] tracking-[-0.02em] font-normal text-balance">
-            Maintenant,{" "}
-            <span className="font-serif italic text-ohe-accent">la conjugaison</span>.
-          </h2>
-          <p className="mt-4 text-ohe-muted text-sm">
-            Même format, 8 questions, 10 secondes par question.
-          </p>
         </div>
       </main>
     );
@@ -141,11 +113,10 @@ export function TestClient() {
 function MobileProgress({ test }: { test: ReturnType<typeof useTest> }) {
   if (test.current.kind === "procedural") {
     const num = test.proceduralIndex + 1;
-    const blockLabel = test.phase === "block1" ? "Accords" : "Conjugaison";
     return (
       <div className="flex items-center gap-3 text-right">
         <span className="text-[11px] uppercase tracking-[0.2em] text-ohe-muted">
-          {blockLabel}
+          Question
         </span>
         <span className="font-serif italic text-ohe-accent text-[22px] leading-none">
           {String(num).padStart(2, "0")}
@@ -174,11 +145,6 @@ function MobileProgress({ test }: { test: ReturnType<typeof useTest> }) {
 function SidebarInfo({ test }: { test: ReturnType<typeof useTest> }) {
   if (test.current.kind === "procedural") {
     const num = test.proceduralIndex + 1;
-    const blockLabel =
-      test.phase === "block1"
-        ? "Bloc 1 — Accords"
-        : "Bloc 2 — Conjugaison";
-
     return (
       <>
         <div className="mt-12">
@@ -208,7 +174,7 @@ function SidebarInfo({ test }: { test: ReturnType<typeof useTest> }) {
 
         <div className="mt-10 pt-7 border-t border-ohe-line">
           <div className="ohe-eyebrow text-ohe-muted">Section</div>
-          <div className="mt-2.5 text-[18px] leading-[1.3]">{blockLabel}</div>
+          <div className="mt-2.5 text-[18px] leading-[1.3]">Questions d&apos;orthographe</div>
         </div>
       </>
     );
@@ -239,13 +205,12 @@ function SidebarInfo({ test }: { test: ReturnType<typeof useTest> }) {
 
         <div className="mt-10 pt-7 border-t border-ohe-line">
           <div className="ohe-eyebrow text-ohe-muted">Section</div>
-                    <div className="mt-2.5 text-[18px] leading-[1.3]">
+          <div className="mt-2.5 text-[18px] leading-[1.3]">
             Votre profil
           </div>
           <div className="mt-2 text-[13px] text-ohe-muted">
             Pas de chrono, prenez votre temps.
           </div>
-
         </div>
       </>
     );
@@ -256,15 +221,10 @@ function SidebarInfo({ test }: { test: ReturnType<typeof useTest> }) {
 
 function CurrentEyebrow({ test }: { test: ReturnType<typeof useTest> }) {
   if (test.current.kind === "procedural") {
-    const label =
-      test.phase === "block1"
-        ? "Accords des mots"
-        : "Conjugaison";
     return (
       <div className="ohe-eyebrow text-ohe-accent inline-flex items-center gap-3 mt-2 lg:mt-6 pr-20">
-        <span className="opacity-65"></span>
         <span style={{ letterSpacing: "0.32em", textTransform: "uppercase" }}>
-          {label}
+          Test d&apos;orthographe
         </span>
       </div>
     );
@@ -272,7 +232,6 @@ function CurrentEyebrow({ test }: { test: ReturnType<typeof useTest> }) {
   if (test.current.kind === "declarative") {
     return (
       <div className="ohe-eyebrow text-ohe-accent inline-flex items-center gap-3 mt-2 lg:mt-6">
-        <span className="opacity-65"></span>
         <span>Votre profil</span>
       </div>
     );

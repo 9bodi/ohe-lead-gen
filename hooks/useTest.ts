@@ -2,11 +2,10 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
-  BLOCK_1,
-  BLOCK_2,
   DECLARATIVES,
+  PROCEDURAL_COUNT,
   PROCEDURAL_SECONDS_PER_QUESTION,
-  shuffleBlock,
+  shuffleAllProcedural,
   type ProceduralQuestion,
   type DeclarativeQuestion,
 } from "@/lib/questions";
@@ -16,9 +15,7 @@ import type { RawAnswer } from "@/lib/scoring/compute";
 
 export type TestPhase =
   | "loading"       // état initial, en attente du mélange côté client
-  | "block1"        // Bloc 1 — accords
-  | "transition"    // Écran transition entre les 2 blocs procéduraux
-  | "block2"        // Bloc 2 — conjugaison
+  | "procedural"    // 16 questions accords + conjugaison mélangées
   | "declaratives"  // 3 questions ADAPTATION
   | "completed";    // Test terminé
 
@@ -36,23 +33,20 @@ export type UseTestState = {
   startedAt: number;
   answerProcedural: (choiceText: string) => void;
   answerDeclarative: (answer: "yes" | "no") => void;
-  finishTransition: () => void;
   reset: () => void;
 };
 
 // === Hook ===
 
 export function useTest(): UseTestState {
-  // === Questions mélangées — null tant que le shuffle n'a pas eu lieu (côté serveur) ===
-  // On stocke en state pour pouvoir muter côté client uniquement.
-  const [block1Questions, setBlock1Questions] = useState<ProceduralQuestion[] | null>(null);
-  const [block2Questions, setBlock2Questions] = useState<ProceduralQuestion[] | null>(null);
+  // === 16 questions procédurales mélangées (accords + conjugaison fusionnés) ===
+  // null tant que le shuffle n'a pas eu lieu (côté serveur)
+  const [proceduralQuestions, setProceduralQuestions] = useState<ProceduralQuestion[] | null>(null);
 
   // === Mélange UNE seule fois au montage (côté client uniquement) ===
   // useEffect ne s'exécute jamais côté serveur, donc pas de mismatch d'hydration.
   useEffect(() => {
-    setBlock1Questions(shuffleBlock(BLOCK_1));
-    setBlock2Questions(shuffleBlock(BLOCK_2));
+    setProceduralQuestions(shuffleAllProcedural());
   }, []);
 
   // === États ===
@@ -65,31 +59,28 @@ export function useTest(): UseTestState {
 
   const questionStartRef = useRef(Date.now());
 
-  // === Passer de "loading" à "block1" dès que le shuffle est fait ===
+  // === Passer de "loading" à "procedural" dès que le shuffle est fait ===
   useEffect(() => {
-    if (phase === "loading" && block1Questions && block2Questions) {
-      setPhase("block1");
+    if (phase === "loading" && proceduralQuestions) {
+      setPhase("procedural");
       questionStartRef.current = Date.now();
     }
-  }, [phase, block1Questions, block2Questions]);
+  }, [phase, proceduralQuestions]);
 
   // === Question courante ===
   const currentQuestion = useMemo((): ProceduralQuestion | DeclarativeQuestion | null => {
-    if (phase === "block1" && block1Questions) {
-      return block1Questions[proceduralIndex] ?? null;
-    }
-    if (phase === "block2" && block2Questions) {
-      return block2Questions[proceduralIndex - 8] ?? null;
+    if (phase === "procedural" && proceduralQuestions) {
+      return proceduralQuestions[proceduralIndex] ?? null;
     }
     if (phase === "declaratives") {
       return DECLARATIVES[declarativeIndex] ?? null;
     }
     return null;
-  }, [phase, proceduralIndex, declarativeIndex, block1Questions, block2Questions]);
+  }, [phase, proceduralIndex, declarativeIndex, proceduralQuestions]);
 
   // === Reset du timer à chaque nouvelle question procédurale ===
   useEffect(() => {
-    if (phase === "block1" || phase === "block2") {
+    if (phase === "procedural") {
       setSecondsLeft(PROCEDURAL_SECONDS_PER_QUESTION);
       questionStartRef.current = Date.now();
     } else if (phase === "declaratives") {
@@ -99,7 +90,7 @@ export function useTest(): UseTestState {
 
   // === Tick du timer (uniquement en phase procédurale) ===
   useEffect(() => {
-    if (phase !== "block1" && phase !== "block2") return;
+    if (phase !== "procedural") return;
 
     const interval = setInterval(() => {
       setSecondsLeft((s) => {
@@ -132,14 +123,11 @@ export function useTest(): UseTestState {
   }, [currentQuestion]);
 
   // === Avancer après une réponse procédurale ===
+  // Plus de transition : on passe directement aux déclaratives après la 16e question
   const advanceFromProcedural = useCallback(() => {
     setProceduralIndex((idx) => {
       const next = idx + 1;
-      if (next === 8) {
-        setPhase("transition");
-        return next;
-      }
-      if (next === 16) {
+      if (next === PROCEDURAL_COUNT) {
         setPhase("declaratives");
         return next;
       }
@@ -197,22 +185,15 @@ export function useTest(): UseTestState {
     [currentQuestion, advanceFromDeclarative]
   );
 
-  const finishTransition = useCallback(() => {
-    if (phase === "transition") {
-      setPhase("block2");
-    }
-  }, [phase]);
-
   const reset = useCallback(() => {
     setPhase("loading");
-    setBlock1Questions(shuffleBlock(BLOCK_1));
-    setBlock2Questions(shuffleBlock(BLOCK_2));
+    setProceduralQuestions(shuffleAllProcedural());
     setProceduralIndex(0);
     setDeclarativeIndex(0);
     setAnswers([]);
     setSecondsLeft(PROCEDURAL_SECONDS_PER_QUESTION);
     questionStartRef.current = Date.now();
-    setPhase("block1");
+    setPhase("procedural");
   }, []);
 
   // === Objet `current` exposé ===
@@ -233,7 +214,6 @@ export function useTest(): UseTestState {
     startedAt,
     answerProcedural,
     answerDeclarative,
-    finishTransition,
     reset,
   };
 }

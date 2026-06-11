@@ -117,16 +117,7 @@ export const contactFormSchema = z
         });
       }
     }
-    // En B2C : profil obligatoire
-    if (data.requestType === "btoc") {
-      if (!data.profile) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          path: ["profile"],
-          message: "Merci de sélectionner votre profil",
-        });
-      }
-    }
+   
   });
 
 export type ContactFormInput = z.infer<typeof contactFormSchema>;

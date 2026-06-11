@@ -45,7 +45,7 @@ function ContactPageContent() {
           "Notre diagnostic personnel sera disponible à la rentrée. Laissez-nous vos coordonnées pour être parmi les premiers informés de son ouverture.",
         rgpd:
           "En vous inscrivant, vous acceptez d'être recontacté(e) par l'équipe OHé pour vous prévenir du lancement. Vos données sont traitées dans le respect du RGPD.",
-        submit: "M'inscrire à la liste",
+        submit: "Me prévenir du lancement",
         confirmTitle: "Merci, vous êtes inscrit(e) !",
         confirmIntro:
           "Nous vous préviendrons par email dès l'ouverture du diagnostic personnel à la rentrée.",
@@ -245,7 +245,7 @@ function ContactPageContent() {
             {/* Champs B2C : Profil obligatoire */}
             {isBtoc && (
               <div>
-                <FieldLabel htmlFor="profile">Votre profil</FieldLabel>
+                <FieldLabel htmlFor="profile" optional>Votre profil</FieldLabel>
                 <select
                   id="profile"
                   value={form.profile || ""}

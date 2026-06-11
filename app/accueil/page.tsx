@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { Badge, Logo, Portrait } from "@/components/ui";
-import { TOTAL_COUNT } from "@/lib/questions";
+import { DISPLAY_TOTAL_COUNT } from "@/lib/questions";
 
 export default function Home() {
   const specs = [
     { num: "01", kpi: "~4 min", label: "Durée moyenne — un café suffit" },
-    { num: "02", kpi: `${TOTAL_COUNT} questions`, label: "Sur deux compétences clés : accord et conjugaison" },
+    { num: "02", kpi: `${DISPLAY_TOTAL_COUNT} questions`, label: "Sur deux compétences clés : accord et conjugaison" },
     { num: "03", kpi: "Maîtrise par compétence", label: "Profil d'adaptation et besoin de formation" },
   ];
 
