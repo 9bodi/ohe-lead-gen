@@ -196,14 +196,7 @@ export default async function ResultPage({ params }: PageProps) {
               </li>
             ))}
           </ul>
-                    <ul className="mt-6 space-y-3">
-            {diagComplet.map((item) => (
-              <li key={item} className="flex items-start gap-3 text-[15px] text-ohe-ink">
-                <span className="text-ohe-accent mt-0.5 shrink-0">✓</span>
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
+                  
 
           {/* Aperçu matrice vierge */}
           <DiagMatrix />
