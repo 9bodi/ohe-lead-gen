@@ -1,8 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
-import { BlockResult, Logo, ResultActions, DiagMatrix } from "@/components/ui";
-
+import { BlockResult, Logo, ResultActions, DiagMatrix, RadarChart } from "@/components/ui";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -196,10 +195,26 @@ export default async function ResultPage({ params }: PageProps) {
               </li>
             ))}
           </ul>
-                  
 
-          {/* Aperçu matrice vierge */}
-          <DiagMatrix />
+          {/* Aperçu — Toile d'araignée des 6 compétences */}
+          <div className="mt-10 pt-8 border-t border-ohe-line-soft">
+            <div className="ohe-caption text-ohe-muted mb-1">Aperçu visuel</div>
+            <h3 className="text-[18px] sm:text-[20px] font-normal text-ohe-ink leading-[1.3]">
+              Toile complète sur{" "}
+              <span className="font-serif italic text-ohe-accent">six compétences</span>
+            </h3>
+            <div className="mt-6">
+              <RadarChart />
+            </div>
+            <p className="mt-4 text-center text-[12px] text-ohe-muted italic">
+              Aperçu indicatif · votre toile personnelle est disponible avec le diagnostic complet
+            </p>
+          </div>
+
+         {/* Aperçu — Matrice du profil */}
+          <div className="mt-10 pt-8 border-t border-ohe-line-soft">
+            <DiagMatrix />
+          </div>
         </div>
 
         {/* Pour aller plus loin — 3 CTA */}
@@ -213,22 +228,16 @@ export default async function ResultPage({ params }: PageProps) {
             </Link>
           </div>
 
-                    <div>
+          <div>
             <Link href={`/contact?type=btob&from=${result.id}`} className={secondaryCtaClass}>
               <span>Réaliser le diagnostic au sein de mon entreprise</span>
               <span className="text-base">{"\u2192"}</span>
             </Link>
           </div>
 
-
           <div className="pt-2">
-            <a
-              href={APP_OHE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={tertiaryCtaClass}
-            >
-              Découvrir l'app OHé Orthographe pour une remise à niveau rapide et facile →
+            <a href={APP_OHE_URL} target="_blank" rel="noopener noreferrer" className={tertiaryCtaClass}>
+              Découvrir l&apos;app OHé Orthographe pour une remise à niveau rapide et facile →
             </a>
           </div>
         </div>

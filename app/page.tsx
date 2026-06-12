@@ -10,7 +10,7 @@ export default function Splash() {
     >
       {/* Logo */}
       <div className="mb-12 sm:mb-14 md:mb-16 w-[110px] sm:w-[150px] md:w-[200px] lg:w-[200px]">
-        <Logo size={140} />
+        <Logo size={200} variant="white" />
       </div>
 
       {/* Titre */}

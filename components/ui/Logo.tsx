@@ -1,34 +1,34 @@
 import Image from "next/image";
 
 interface LogoProps {
-  /** Taille en pixels de la hauteur du logo */
   size?: number;
-  /** Affichage en ligne avec ou sans label "Diagnostic" à côté */
   withLabel?: boolean;
+  variant?: "default" | "white";
 }
 
-export function Logo({ size = 48, withLabel = false }: LogoProps) {
-  // Ratio approximatif du logo (largeur / hauteur)
-  // À ajuster si nécessaire selon les vraies dimensions du PNG
-  const aspectRatio = 1.05;
+export function Logo({ size = 48, withLabel = false, variant = "default" }: LogoProps) {
+  const isWhite = variant === "white";
+
+  // logo-blanc.png : 479 × 242  → 1.98
+  // ohe-logo.png   : 1064 × 561 → 1.90
+  const aspectRatio = isWhite ? 1.98 : 1.9;
   const width = Math.round(size * aspectRatio);
+
+  const src = isWhite ? "/images/logo-blanc.png" : "/images/ohe-logo.png";
 
   return (
     <div className="inline-flex items-center gap-4">
       <Image
-        src="/images/ohe-logo.png"
+        src={src}
         alt="OHé — Orthographe Héros"
         width={width}
         height={size}
         priority
-        style={{
-          width: "auto",
-          height: size,
-          maxWidth: "100%",
-        }}
+        className="h-auto w-auto max-w-full"
+        style={{ maxHeight: size }}
       />
       {withLabel && (
-        <span className="ohe-caption text-ohe-accent opacity-75">
+        <span className={`ohe-caption ${isWhite ? "text-white opacity-90" : "text-ohe-accent opacity-75"}`}>
           Diagnostic
         </span>
       )}

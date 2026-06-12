@@ -15,5 +15,5 @@ export { LeadFilters } from "./LeadFilters";
 export { ContactFilters } from "./ContactFilters";
 export { ResultActions } from "./ResultActions";
 export { DiagMatrix } from "./DiagMatrix";
-
+export { RadarChart } from "./RadarChart";
 
