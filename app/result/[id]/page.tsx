@@ -96,7 +96,7 @@ export default async function ResultPage({ params }: PageProps) {
 
           <p className="mt-4 text-base text-ohe-muted text-pretty max-w-[620px] leading-[1.55]">
             Ce test est une version abrégée du diagnostic conçu par docteure Joannidès.
-            Il vous offre un premier aperçu de votre niveau en accord et en conjugaison.
+            Il vous offre un premier aperçu de votre maîtrise sur deux compétences clés.
             Quatre autres compétences clés restent à explorer pour obtenir un diagnostic complet.
           </p>
         </div>
