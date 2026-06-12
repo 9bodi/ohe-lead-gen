@@ -64,10 +64,10 @@ export function renderResultEmail(props: ResultEmailProps): { html: string; text
           <tr>
             <td style="padding:40px 40px 24px;">
               <div style="font-size:11px; letter-spacing:0.32em; text-transform:uppercase; color:#1E3A8A; margin-bottom:16px;">
-                ✱ Votre bilan diagnostic
+                Votre bilan diagnostic
               </div>
               <h1 style="margin:0; font-size:36px; line-height:1.1; font-weight:normal; color:#15171C;">
-                Bravo, votre premier pas est fait.
+                Bravo, votre premier pas est fait
               </h1>
               <p style="margin:16px 0 0; font-size:16px; line-height:1.55; color:#6A6E78;">
                 Vous venez d'évaluer votre maîtrise de l'écrit. Voici vos résultats sur deux compétences clés.
@@ -90,7 +90,7 @@ export function renderResultEmail(props: ResultEmailProps): { html: string; text
                         <td style="width:40px; font-size:11px; letter-spacing:0.2em; color:#1E3A8A;">01</td>
                         <td>
                           <span style="display:inline-block; width:8px; height:8px; background:${block1Colors.dot}; border-radius:50%; margin-right:10px; vertical-align:middle;"></span>
-                          <span style="font-family: Georgia, serif; font-style:italic; font-size:18px; color:#15171C; vertical-align:middle;">Accords des mots</span>
+                          <span style="font-family: Georgia, serif; font-style:italic; font-size:18px; color:#15171C; vertical-align:middle;">Singulier/pluriel</span>
                         </td>
                         <td align="right" style="white-space:nowrap;">
                           <span style="font-family: Georgia, serif; font-style:italic; font-size:16px; color:#15171C; margin-right:12px;">${block1Percent} %</span>
@@ -108,7 +108,7 @@ export function renderResultEmail(props: ResultEmailProps): { html: string; text
                         <td style="width:40px; font-size:11px; letter-spacing:0.2em; color:#1E3A8A;">02</td>
                         <td>
                           <span style="display:inline-block; width:8px; height:8px; background:${block2Colors.dot}; border-radius:50%; margin-right:10px; vertical-align:middle;"></span>
-                          <span style="font-family: Georgia, serif; font-style:italic; font-size:18px; color:#15171C; vertical-align:middle;">Conjugaison des verbes</span>
+                          <span style="font-family: Georgia, serif; font-style:italic; font-size:18px; color:#15171C; vertical-align:middle;">Conjugaison</span>
                         </td>
                         <td align="right" style="white-space:nowrap;">
                           <span style="font-family: Georgia, serif; font-style:italic; font-size:16px; color:#15171C; margin-right:12px;">${block2Percent} %</span>
@@ -128,7 +128,7 @@ export function renderResultEmail(props: ResultEmailProps): { html: string; text
               <div style="font-size:11px; letter-spacing:0.32em; text-transform:uppercase; color:#6A6E78; margin-bottom:16px;">
                 Encore à explorer
               </div>
-              ${["Participe passé", "Orthographe lexicale", "Syntaxe", "Compréhension"]
+              ${["Participe passé", "Orthographe des mots", "Syntaxe", "Compréhension"]
                 .map(
                   (title, i) => `
                 <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
@@ -161,7 +161,7 @@ export function renderResultEmail(props: ResultEmailProps): { html: string; text
           <tr>
             <td style="padding:24px 40px;">
               <div style="font-size:11px; letter-spacing:0.32em; text-transform:uppercase; color:#1E3A8A; margin-bottom:12px;">
-                ✱ Notre recommandation
+                Notre recommandation
               </div>
               <p style="margin:0; font-size:17px; line-height:1.55; color:#15171C;">
                 ${recommendation}
@@ -179,18 +179,18 @@ export function renderResultEmail(props: ResultEmailProps): { html: string; text
                 Pour aller plus loin
               </div>
 
-              <!-- CTA principal : diagnostic équipe -->
+              <!-- CTA principal : diagnostic complet -->
               <table role="presentation" cellpadding="0" cellspacing="0">
                 <tr>
                   <td style="background:#1E3A8A; border-radius:999px;">
                     <a href="${contactUrl}" style="display:inline-block; padding:14px 28px; color:#F8FAFD; text-decoration:none; font-size:14px; font-weight:500;">
-                      Diagnostiquer mon équipe avec OHé →
+                      Réaliser mon diagnostic complet →
                     </a>
                   </td>
                 </tr>
               </table>
               <p style="margin:8px 0 24px; font-size:12px; color:#6A6E78; font-style:italic;">
-                Évaluez vos collaborateurs sur les 6 compétences et identifiez les besoins de formation.
+                Cartographie précise des forces et axes d'amélioration sur 6 compétences.
               </p>
 
               <!-- CTA secondaire : site formation -->
@@ -247,13 +247,13 @@ Bravo — vous venez de faire le premier pas : évaluer votre maîtrise de l'éc
 
 VOS RÉSULTATS SUR 2 COMPÉTENCES
 
-01. Accords des mots : ${block1Percent} % — ${LEVEL_LABELS[score.block1.level]}
-02. Conjugaison des verbes : ${block2Percent} % — ${LEVEL_LABELS[score.block2.level]}
+01. Singulier/pluriel : ${block1Percent} % — ${LEVEL_LABELS[score.block1.level]}
+02. Conjugaison : ${block2Percent} % — ${LEVEL_LABELS[score.block2.level]}
 
 ENCORE À EXPLORER
 
 03. Participe passé (verrouillé)
-04. Orthographe lexicale (verrouillé)
+04. Orthographe des mots (verrouillé)
 05. Syntaxe (verrouillé)
 06. Compréhension (verrouillé)
 
@@ -267,7 +267,7 @@ Les fautes ne sont pas une fatalité, juste un problème de méthode. Votre scor
 
 POUR ALLER PLUS LOIN
 
-→ Diagnostiquer mon équipe avec OHé : ${contactUrl}
+→ Réaliser mon diagnostic complet : ${contactUrl}
 → Découvrir la formation OHé : ${formationUrl}
 
 Consulter votre bilan en ligne : ${resultUrl}

@@ -61,7 +61,7 @@ export default async function LeadsPage({ searchParams }: PageProps) {
                 Tableau de bord
               </Link>
               <Link href="/admin/leads" className="text-ohe-ink font-medium">
-                Leads
+                Tests complétés
               </Link>
               <Link href="/admin/contacts" className="text-ohe-muted hover:text-ohe-ink transition-colors">
                 Demandes de contact
@@ -80,12 +80,12 @@ export default async function LeadsPage({ searchParams }: PageProps) {
       <div className="max-w-[1400px] mx-auto px-14 py-10">
         <div className="flex items-end justify-between mb-6">
           <div>
-            <div className="ohe-eyebrow text-ohe-accent"> Administration</div>
+            <div className="ohe-eyebrow text-ohe-accent">Administration</div>
             <h1 className="mt-3 text-[40px] leading-[1.05] tracking-[-0.022em] font-normal text-balance">
-              Leads <span className="font-serif italic text-ohe-accent">freemium</span>
+              Tests <span className="font-serif italic text-ohe-accent">complétés</span>
             </h1>
             <p className="mt-2 text-sm text-ohe-muted">
-              {total} {total > 1 ? "leads" : "lead"} {currentParams.toString() ? "correspondants aux filtres" : "au total"}
+              {total} {total > 1 ? "tests" : "test"} {currentParams.toString() ? "correspondants aux filtres" : "au total"}
             </p>
           </div>
         </div>
@@ -97,7 +97,7 @@ export default async function LeadsPage({ searchParams }: PageProps) {
         {leads.length === 0 ? (
           <div className="bg-ohe-panel-tint border border-ohe-line rounded-2xl px-10 py-16 text-center">
             <p className="text-ohe-muted">
-              {currentParams.toString() ? "Aucun lead ne correspond à ces filtres." : "Aucun lead pour l'instant."}
+              {currentParams.toString() ? "Aucun test ne correspond à ces filtres." : "Aucun test pour l'instant."}
             </p>
           </div>
         ) : (
@@ -107,8 +107,8 @@ export default async function LeadsPage({ searchParams }: PageProps) {
                 <tr>
                   <th className="text-left px-5 py-4 font-medium text-ohe-muted ohe-caption" style={{ letterSpacing: "0.18em" }}>Date</th>
                   <th className="text-left px-5 py-4 font-medium text-ohe-muted ohe-caption" style={{ letterSpacing: "0.18em" }}>Email</th>
-                  <th className="text-left px-5 py-4 font-medium text-ohe-muted ohe-caption" style={{ letterSpacing: "0.18em" }}>Bloc 1</th>
-                  <th className="text-left px-5 py-4 font-medium text-ohe-muted ohe-caption" style={{ letterSpacing: "0.18em" }}>Bloc 2</th>
+                  <th className="text-left px-5 py-4 font-medium text-ohe-muted ohe-caption" style={{ letterSpacing: "0.18em" }}>Singulier/pluriel</th>
+                  <th className="text-left px-5 py-4 font-medium text-ohe-muted ohe-caption" style={{ letterSpacing: "0.18em" }}>Conjugaison</th>
                   <th className="text-left px-5 py-4 font-medium text-ohe-muted ohe-caption" style={{ letterSpacing: "0.18em" }}>Adaptation</th>
                   <th className="text-left px-5 py-4 font-medium text-ohe-muted ohe-caption" style={{ letterSpacing: "0.18em" }}>Marketing</th>
                   <th className="text-left px-5 py-4 font-medium text-ohe-muted ohe-caption" style={{ letterSpacing: "0.18em" }}>Source</th>

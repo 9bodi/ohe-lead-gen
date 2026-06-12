@@ -15,6 +15,7 @@ import {
   PROCEDURAL_PROMPT,
   PROCEDURAL_SECONDS_PER_QUESTION,
   DECLARATIVE_COUNT,
+  DISPLAY_TOTAL_COUNT,
 } from "@/lib/questions";
 
 export function TestClient() {
@@ -120,21 +121,22 @@ function MobileProgress({ test }: { test: ReturnType<typeof useTest> }) {
         </span>
         <span className="font-serif italic text-ohe-accent text-[22px] leading-none">
           {String(num).padStart(2, "0")}
-          <span className="text-ohe-muted text-[14px]"> / {PROCEDURAL_COUNT}</span>
+          <span className="text-ohe-muted text-[14px]"> / {DISPLAY_TOTAL_COUNT}</span>
         </span>
       </div>
     );
   }
   if (test.current.kind === "declarative") {
-    const num = test.declarativeIndex + 1;
+    // Compteur continu : 17 / 20, 18 / 20, 19 / 20
+    const num = PROCEDURAL_COUNT + test.declarativeIndex + 1;
     return (
       <div className="flex items-center gap-3 text-right">
         <span className="text-[11px] uppercase tracking-[0.2em] text-ohe-muted">
-          Profil
+          Question
         </span>
         <span className="font-serif italic text-ohe-accent text-[22px] leading-none">
           {String(num).padStart(2, "0")}
-          <span className="text-ohe-muted text-[14px]"> / {DECLARATIVE_COUNT}</span>
+          <span className="text-ohe-muted text-[14px]"> / {DISPLAY_TOTAL_COUNT}</span>
         </span>
       </div>
     );
@@ -161,12 +163,12 @@ function SidebarInfo({ test }: { test: ReturnType<typeof useTest> }) {
               {String(num).padStart(2, "0")}
             </span>
             <span className="text-ohe-muted text-[22px]">
-              / {PROCEDURAL_COUNT}
+              / {DISPLAY_TOTAL_COUNT}
             </span>
           </div>
           <div className="mt-4">
             <ProgressDots
-              total={PROCEDURAL_COUNT}
+              total={DISPLAY_TOTAL_COUNT}
               current={test.proceduralIndex}
             />
           </div>
@@ -181,11 +183,12 @@ function SidebarInfo({ test }: { test: ReturnType<typeof useTest> }) {
   }
 
   if (test.current.kind === "declarative") {
-    const num = test.declarativeIndex + 1;
+    // Compteur continu
+    const num = PROCEDURAL_COUNT + test.declarativeIndex + 1;
     return (
       <>
         <div className="mt-12">
-          <div className="ohe-eyebrow text-ohe-accent"> Profil</div>
+          <div className="ohe-eyebrow text-ohe-accent"> Progression</div>
           <div className="mt-3 flex items-baseline gap-2.5">
             <span
               className="font-serif italic text-ohe-accent"
@@ -198,8 +201,14 @@ function SidebarInfo({ test }: { test: ReturnType<typeof useTest> }) {
               {String(num).padStart(2, "0")}
             </span>
             <span className="text-ohe-muted text-[22px]">
-              / {DECLARATIVE_COUNT}
+              / {DISPLAY_TOTAL_COUNT}
             </span>
+          </div>
+          <div className="mt-4">
+            <ProgressDots
+              total={DISPLAY_TOTAL_COUNT}
+              current={PROCEDURAL_COUNT + test.declarativeIndex}
+            />
           </div>
         </div>
 

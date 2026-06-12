@@ -108,7 +108,7 @@ export default async function ResultPage({ params }: PageProps) {
             <BlockResult
               mode="visible"
               num="01"
-              title="Accords (classes nominales et pluriel)"
+              title="Singulier/pluriel"
               correct={result.block1Correct}
               total={8}
               level={result.block1Level}
@@ -118,7 +118,7 @@ export default async function ResultPage({ params }: PageProps) {
             <BlockResult
               mode="visible"
               num="02"
-              title="Conjugaison (du verbe)"
+              title="Conjugaison"
               correct={result.block2Correct}
               total={8}
               level={result.block2Level}
@@ -126,7 +126,7 @@ export default async function ResultPage({ params }: PageProps) {
               color={LEVEL_TO_COLOR[result.block2Level]}
             />
             <BlockResult mode="locked" num="03" title="Participe passé" />
-            <BlockResult mode="locked" num="04" title="Orthographe lexicale" />
+            <BlockResult mode="locked" num="04" title="Orthographe des mots" />
             <BlockResult mode="locked" num="05" title="Syntaxe" />
             <BlockResult mode="locked" num="06" title="Compréhension" />
           </div>
