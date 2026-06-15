@@ -6,7 +6,7 @@ export default function Home() {
   const specs = [
     { num: "01", kpi: "~4 min", label: "Durée moyenne — un café suffit" },
     { num: "02", kpi: `${DISPLAY_TOTAL_COUNT} questions`, label: "Sur deux compétences clés : accord et conjugaison" },
-    { num: "03", kpi: "Maîtrise par compétence", label: "Profil d'adaptation et besoin de formation" },
+    { num: "03", kpi: "Maîtrise par compétences", label: "Analyse des forces et axes d'amélioration" },
   ];
 
   return (

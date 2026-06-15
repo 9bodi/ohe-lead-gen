@@ -36,7 +36,8 @@ export default function RulesPage() {
       {/* Contenu centré */}
       <div className="flex-1 flex items-center justify-center px-6 py-10 sm:px-10 lg:px-14 lg:py-12">
         <div className="max-w-[720px] w-full">
-          <Eyebrow tone="accent">A V A N T &nbsp; D E &nbsp; C O M M E N C E R</Eyebrow>
+          <Eyebrow tone="accent" mark={null}>A V A N T &nbsp; D E &nbsp; C O M M E N C E R</Eyebrow>
+
 
           <h1 className="mt-6 text-[38px] sm:text-[48px] lg:text-[56px] leading-[1.06] lg:leading-[1.05] tracking-[-0.022em] font-normal text-balance">
             Trois règles

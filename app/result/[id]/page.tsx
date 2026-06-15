@@ -54,7 +54,7 @@ export default async function ResultPage({ params }: PageProps) {
     { letter: "A", range: "0–37 %", label: "Élémentaire", besoin: "Besoins de base" },
     { letter: "B1", range: "40–60 %", label: "Indépendant intermédiaire", besoin: "Besoins techniques" },
     { letter: "B2", range: "62–80 %", label: "Indépendant avancé", besoin: "Besoins professionnels" },
-        { letter: "C", range: "82–100 %", label: "Expérimenté / expert", besoin: "Besoins experts" },
+            { letter: "C", range: "82–100 %", label: "Expérimenté", besoin: "Besoins experts" },
 
   ];
 
@@ -95,14 +95,15 @@ export default async function ResultPage({ params }: PageProps) {
 
           <p className="mt-4 text-base text-ohe-muted text-pretty max-w-[620px] leading-[1.55]">
             Ce test est une version abrégée du diagnostic conçu par docteure Joannidès.
-            Il vous offre un premier aperçu de votre maîtrise sur deux compétences clés.
+            Il vous offre un premier aperçu de votre maîtrise du singulier/pluriel
+            et de la conjugaison.
             Quatre autres compétences clés restent à explorer pour obtenir un diagnostic complet.
           </p>
         </div>
 
         {/* Détail par compétence */}
         <div>
-          <div className="ohe-eyebrow text-ohe-muted mb-4">Détail par compétence</div>
+                    <div className="ohe-eyebrow text-ohe-muted mb-4">Résultat par compétence</div>
           <div className="border-t border-ohe-line">
             <BlockResult
               mode="visible"

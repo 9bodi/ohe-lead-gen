@@ -41,8 +41,9 @@ function ContactPageContent() {
         eyebrow: "Diagnostic personnel",
         titlePlain: "Soyez informé(e) du",
         titleAccent: "lancement",
-        intro:
-          "Notre diagnostic personnel sera disponible à la rentrée. Laissez-nous vos coordonnées pour être parmi les premiers informés de son ouverture.",
+                intro:
+          "Notre diagnostic complet sera disponible à la rentrée. Laissez-nous vos coordonnées pour être parmi les premiers informés de son ouverture et obtenir une évaluation précise de vos compétences à l'écrit.",
+
         rgpd:
           "En vous inscrivant, vous acceptez d'être recontacté(e) par l'équipe OHé pour vous prévenir du lancement. Vos données sont traitées dans le respect du RGPD.",
         submit: "Me prévenir du lancement",
@@ -299,8 +300,9 @@ function ContactPageContent() {
 
                 <div>
                   <FieldLabel htmlFor="teamSize" optional>
-                    Équipe à évaluer
-                  </FieldLabel>
+  Taille de l'équipe
+</FieldLabel>
+
                   <select
                     id="teamSize"
                     value={form.teamSize || ""}

@@ -14,7 +14,7 @@ export const TEAM_SIZE_OPTIONS = [
 export const PROFILE_OPTIONS = [
   { value: "salarie", label: "Salarié(e)" },
   { value: "etudiant", label: "Étudiant(e)" },
-  { value: "demandeur_emploi", label: "Demandeur d'emploi" },
+  { value: "demandeur_emploi", label: "En recherche d'emploi" },
   { value: "independant", label: "Indépendant(e)" },
   { value: "autre", label: "Autre" },
 ] as const;
