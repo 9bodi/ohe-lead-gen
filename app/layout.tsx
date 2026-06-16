@@ -20,7 +20,7 @@ const instrumentSerif = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
-  title: "OHé — Diagnostic",
+  title: "OHé - Diagnostic",
   description: "Évaluez votre niveau en français en moins de 5 minutes.",
 };
 
